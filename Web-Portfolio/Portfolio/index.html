@@ -1,0 +1,914 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>F.I.S.A - Frontend Developer & Designer</title>
+<script src="https://cdn.tailwindcss.com/3.4.16"></script>
+<script>tailwind.config={theme:{extend:{colors:{primary:'#3b82f6',secondary:'#10b981'},borderRadius:{'none':'0px','sm':'4px',DEFAULT:'8px','md':'12px','lg':'16px','xl':'20px','2xl':'24px','3xl':'32px','full':'9999px','button':'8px'}}}}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css" rel="stylesheet">
+<style>
+:where([class^="ri-"])::before { content: "\f3c2"; }
+body {
+font-family: 'Inter', sans-serif;
+}
+/* Dark mode styles */
+.dark-mode {
+  background-color: #1a202c;
+  color: #f7fafc;
+}
+.py-4 img{
+width:75px;
+}
+footer img{
+  width: 85px;
+}
+.max-w-2xl{
+margin-top: 75px;
+}
+.hero-section {
+background-color: #000000;
+background-size: cover;
+background-position: center;
+}
+.scroll-down {
+animation: bounce 2s infinite;
+}
+@keyframes bounce {
+0%, 20%, 50%, 80%, 100% {
+transform: translateY(0);
+}
+40% {
+transform: translateY(-10px);
+}
+60% {
+transform: translateY(-5px);
+}
+}
+input:focus, textarea:focus {
+outline: none;
+border-color: #3b82f6;
+}
+.custom-checkbox {
+position: relative;
+cursor: pointer;
+}
+.custom-checkbox input {
+position: absolute;
+opacity: 0;
+cursor: pointer;
+}
+.checkmark {
+position: absolute;
+top: 0;
+left: 0;
+height: 20px;
+width: 20px;
+background-color: #fff;
+border: 2px solid #e5e7eb;
+border-radius: 4px;
+transition: all 0.2s ease;
+}
+.custom-checkbox input:checked ~ .checkmark {
+background-color: #3b82f6;
+border-color: #3b82f6;
+}
+.checkmark:after {
+content: "";
+position: absolute;
+display: none;
+}
+.custom-checkbox input:checked ~ .checkmark:after {
+display: block;
+}
+.custom-checkbox .checkmark:after {
+left: 6px;
+top: 2px;
+width: 5px;
+height: 10px;
+border: solid white;
+border-width: 0 2px 2px 0;
+transform: rotate(45deg);
+}
+.mode-toggle {
+position: relative;
+width: 50px;
+height: 26px;
+}
+.mode-toggle input {
+opacity: 0;
+width: 0;
+height: 0;
+}
+.mode-slider {
+position: absolute;
+cursor: pointer;
+top: 0;
+left: 0;
+right: 0;
+bottom: 0;
+background-color: #e5e7eb;
+transition: .4s;
+border-radius: 34px;
+}
+.mode-slider:before {
+position: absolute;
+content: "";
+height: 20px;
+width: 20px;
+left: 3px;
+bottom: 3px;
+background-color: white;
+transition: .4s;
+border-radius: 50%;
+}
+input:checked + .mode-slider {
+background-color: #3b82f6;
+}
+input:checked + .mode-slider:before {
+transform: translateX(24px);
+}
+.filter-button.active {
+background-color: #3b82f6;
+color: white;
+}
+.project-card {
+transition: transform 0.3s ease;
+}
+.project-card:hover {
+transform: translateY(-5px);
+}
+.project-overlay {
+opacity: 0;
+transition: opacity 0.3s ease;
+}
+.project-card:hover .project-overlay {
+opacity: 1;
+}
+.skill-bar {
+height: 8px;
+border-radius: 4px;
+background-color: #e5e7eb;
+overflow: hidden;
+}
+.skill-progress {
+height: 100%;
+border-radius: 4px;
+background-color: #3b82f6;
+}
+/* New animations */
+@keyframes fadeIn {
+from { opacity: 0; }
+to { opacity: 1; }
+}
+@keyframes slideInLeft {
+from { transform: translateX(-50px); opacity: 0; }
+to { transform: translateX(0); opacity: 1; }
+}
+@keyframes slideInRight {
+from { transform: translateX(50px); opacity: 0; }
+to { transform: translateX(0); opacity: 1; }
+}
+@keyframes slideInUp {
+from { transform: translateY(50px); opacity: 0; }
+to { transform: translateY(0); opacity: 1; }
+}
+@keyframes pulse {
+0% { transform: scale(1); }
+50% { transform: scale(1.05); }
+100% { transform: scale(1); }
+}
+@keyframes float {
+0% { transform: translateY(0px); }
+50% { transform: translateY(-10px); }
+100% { transform: translateY(0px); }
+}
+@keyframes rotate {
+from { transform: rotate(0deg); }
+to { transform: rotate(360deg); }
+}
+@keyframes typewriter {
+from { width: 0; }
+to { width: 100%; }
+}
+.animate-fadeIn {
+animation: fadeIn 1s ease forwards;
+}
+.animate-slideInLeft {
+animation: slideInLeft 1s ease forwards;
+}
+.animate-slideInRight {
+animation: slideInRight 1s ease forwards;
+}
+.animate-slideInUp {
+animation: slideInUp 1s ease forwards;
+}
+.animate-pulse {
+animation: pulse 2s infinite;
+}
+.animate-float {
+animation: float 3s ease-in-out infinite;
+}
+.animate-rotate {
+animation: rotate 8s linear infinite;
+}
+.animate-typewriter {
+display: inline-block;
+overflow: hidden;
+white-space: nowrap;
+animation: typewriter 3s steps(40) 1s forwards;
+width: 0;
+}
+.animate-delay-100 {
+animation-delay: 0.1s;
+}
+.animate-delay-200 {
+animation-delay: 0.2s;
+}
+.animate-delay-300 {
+animation-delay: 0.3s;
+}
+.animate-delay-400 {
+animation-delay: 0.4s;
+}
+.animate-delay-500 {
+animation-delay: 0.5s;
+}
+.reveal {
+opacity: 0;
+transform: translateY(30px);
+transition: all 0.8s ease;
+}
+.reveal.active {
+opacity: 1;
+transform: translateY(0);
+}
+.skill-progress {
+width: 0;
+transition: width 1.5s ease-in-out;
+}
+.btn-hover-effect {
+position: relative;
+overflow: hidden;
+z-index: 1;
+}
+.btn-hover-effect:after {
+content: '';
+position: absolute;
+bottom: 0;
+left: 0;
+width: 100%;
+height: 100%;
+background-color: rgba(255, 255, 255, 0.2);
+transform: scaleX(0);
+transform-origin: right;
+transition: transform 0.5s ease;
+z-index: -1;
+}
+.btn-hover-effect:hover:after {
+transform: scaleX(1);
+transform-origin: left;
+}
+.icon-spin {
+transition: transform 0.5s ease;
+}
+.icon-spin:hover {
+transform: rotate(360deg);
+}
+</style>
+</head>
+<body class="bg-white">
+<!-- Navigation -->
+<nav class="fixed top-0 left-0 w-full z-50 transition-all duration-300 bg-transparent">
+<div class="container mx-auto px-6 py-4 flex items-center justify-between">
+<img src="./Logo-Portfolio.png" alt="">
+<div class="hidden md:flex items-center space-x-8">
+<a href="#work" class="text-white hover:text-primary font-medium">Work</a>
+<a href="#about" class="text-white hover:text-primary font-medium">About</a>
+<a href="#services" class="text-white hover:text-primary font-medium">Services</a>
+<a href="#contact" class="text-white hover:text-primary font-medium">Contact</a>
+</div>
+<div class="flex items-center space-x-4">
+<label class="mode-toggle">
+<input type="checkbox">
+<span class="mode-slider"></span>
+</label>
+<button class="md:hidden w-10 h-10 flex items-center justify-center text-white">
+<i class="ri-menu-line ri-lg"></i>
+</button>
+</div>
+</div>
+</nav>
+<!-- Hero Section with Slider -->
+<section class="hero-section min-h-[30vh] flex items-center relative py-8 bg-black">
+<div class="container mx-auto px-6 w-full flex flex-col md:flex-row items-center justify-between">
+<div class="max-w-2xl text-center md:text-left mb-4 md:mb-0 animate-slideInLeft z-10">
+<h1 class="text-3xl md:text-4xl font-bold text-white leading-tight animate-typewriter">Frontend Developer & Designer</h1>
+<p class="text-base md:text-lg text-gray-300 mt-2 animate-fadeIn animate-delay-300">Bringing ideas to life visually and digitally</p>
+<div class="mt-4 flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4 justify-center md:justify-start">
+</div>
+</div>
+<div class="absolute inset-0 w-full h-full overflow-hidden">
+<div class="slider-container w-full h-full">
+<div class="slides-wrapper w-full h-full flex transition-transform duration-1000 ease-in-out">
+<div class="slide w-full h-full flex-shrink-0 bg-cover bg-center" style="background-image: url('https://public.readdy.ai/ai/img_res/3bb0d4f31e5a094686982c9b12652b8a.jpg')"></div>
+<div class="slide w-full h-full flex-shrink-0 bg-cover bg-center" style="background-image: url('https://public.readdy.ai/ai/img_res/543052adc1271f159c0bc4553a455e64.jpg')"></div>
+<div class="slide w-full h-full flex-shrink-0 bg-cover bg-center" style="background-image: url('https://public.readdy.ai/ai/img_res/3d6635c4999072f51beb72a38277bd2b.jpg')"></div>
+<div class="slide w-full h-full flex-shrink-0 bg-cover bg-center" style="background-image: url('https://public.readdy.ai/ai/img_res/41de82aa4e5ee36db1dfc9f123cf37d3.jpg')"></div>
+</div>
+</div>
+<div class="absolute inset-0 bg-black bg-opacity-60"></div>
+</div>
+<div class="absolute bottom-2 left-1/2 transform -translate-x-1/2 scroll-down z-10">
+<a href="#work" class="w-6 h-6 flex items-center justify-center text-white">
+<i class="ri-arrow-down-line ri-lg"></i>
+</a>
+</div>
+<div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex space-x-2 z-10">
+<button class="slider-dot w-3 h-3 rounded-full bg-white bg-opacity-50 focus:outline-none" data-index="0"></button>
+<button class="slider-dot w-3 h-3 rounded-full bg-white bg-opacity-50 focus:outline-none" data-index="1"></button>
+<button class="slider-dot w-3 h-3 rounded-full bg-white bg-opacity-50 focus:outline-none" data-index="2"></button>
+<button class="slider-dot w-3 h-3 rounded-full bg-white bg-opacity-50 focus:outline-none" data-index="3"></button>
+</div>
+</div>
+</section>
+<!-- Portfolio Section -->
+<section id="work" class="py-20 bg-gray-50">
+<div class="container mx-auto px-6">
+<div class="text-center mb-16 reveal">
+<h2 class="text-3xl md:text-4xl font-bold text-gray-900">My Portfolio</h2>
+<p class="text-gray-600 mt-4 max-w-2xl mx-auto">Showcasing a selection of my best work across web development, design, and video production</p>
+</div>
+<div class="flex flex-wrap justify-center gap-4 mb-12 reveal">
+<button class="filter-button active px-6 py-2 !rounded-button text-sm font-medium whitespace-nowrap animate-fadeIn animate-delay-100">My Projects</button>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 reveal">
+<!-- Project 1 -->
+<div class="project-card bg-white rounded shadow-md overflow-hidden">
+<div class="relative">
+<img src="./assets/Diary.svg" alt="E-commerce Website" class="w-full h-64 object-cover object-top">
+<div class="project-overlay absolute inset-0 bg-primary bg-opacity-80 flex items-center justify-center">
+<div class="text-center p-6">
+<h3 class="text-white text-xl font-semibold">Simple Blog Page</h3>
+<p class="text-white text-sm mt-2">Web Design, Development</p>
+<a href="./F.I.S.A's Work/Echo Diary/echodiary.html"><button class="mt-4 bg-white text-primary px-4 py-2 !rounded-button text-sm font-medium whitespace-nowrap">View Project</button></a>
+</div>
+</div>
+</div>
+<div class="p-6">
+<h3 class="text-gray-900 text-xl font-semibold">Simple Blog Page</h3>
+<p class="text-gray-600 mt-2">A complete redesign and development of a Blog site. A clean, minimalistic platform designed for sharing thoughts, stories, and ideas with ease.</p>
+</div>
+</div>
+<!-- Project 2 -->
+<div class="project-card bg-white rounded shadow-md overflow-hidden">
+<div class="relative">
+<img src="./assets/Studio.svg" alt="Fitness App" class="w-full h-64 object-cover object-top">
+<div class="project-overlay absolute inset-0 bg-primary bg-opacity-80 flex items-center justify-center">
+<div class="text-center p-6">
+<h3 class="text-white text-xl font-semibold">Training Studio</h3>
+<p class="text-white text-sm mt-2">UI/UX, Development</p>
+<a href="./F.I.S.A's Work/Studio Project/studio.html"><button class="mt-4 bg-white text-primary px-4 py-2 !rounded-button text-sm font-medium whitespace-nowrap">View Project</button></a>
+</div>
+</div>
+</div>
+<div class="p-6">
+<h3 class="text-gray-900 text-xl font-semibold">Training Studio</h3>
+<p class="text-gray-600 mt-2">A modern gym website to showcase services, trainers, and fitness plans.</p>
+</div>
+</div>
+<!-- Project 3 -->
+<div class="project-card bg-white rounded shadow-md overflow-hidden">
+<div class="relative">
+<img src="./assets/Instrument.svg" alt="Travel Video" class="w-full h-64 object-cover object-top">
+<div class="project-overlay absolute inset-0 bg-primary bg-opacity-80 flex items-center justify-center">
+<div class="text-center p-6">
+<h3 class="text-white text-xl font-semibold">Instrument-Sales website</h3>
+<p class="text-white text-sm mt-2">UI/UX, Web Development</p>
+<a href="./F.I.S.A's Work/Instrument/instrument.html"><button class="mt-4 bg-white text-primary px-4 py-2 !rounded-button text-sm font-medium whitespace-nowrap">View Project</button></a>
+</div>
+</div>
+</div>
+<div class="p-6">
+<h3 class="text-gray-900 text-xl font-semibold">Instrument-Sales website</h3>
+<p class="text-gray-600 mt-2">Shop quality musical instruments online with ease and confidence.</p>
+</div>
+</div>
+<!-- Project 4 -->
+<div class="project-card bg-white rounded shadow-md overflow-hidden">
+<div class="relative">
+<img src="./assets/Restaurant.svg" alt="Coffee Shop Branding" class="w-full h-64 object-cover object-top">
+<div class="project-overlay absolute inset-0 bg-primary bg-opacity-80 flex items-center justify-center">
+<div class="text-center p-6">
+<h3 class="text-white text-xl font-semibold">Chef Hub | Food Gallery</h3>
+<p class="text-white text-sm mt-2">UI/UX, Web Development</p>
+<a href="./F.I.S.A's Work/Food Gallery/Food-Gallery-Homepage.html"><button class="mt-4 bg-white text-primary px-4 py-2 !rounded-button text-sm font-medium whitespace-nowrap">View Project</button></a>
+</div>
+</div>
+</div>
+<div class="p-6">
+<h3 class="text-gray-900 text-xl font-semibold">Chef Hub | Food Gallery</h3>
+<p class="text-gray-600 mt-2">Complete brand identity design for a restaurant, including seamless design</p>
+</div>
+</div>
+</section>
+<!-- Skills & Services Section -->
+<section id="services" class="py-20 bg-white">
+<div class="container mx-auto px-6">
+<div class="text-center mb-16 reveal">
+<h2 class="text-3xl md:text-4xl font-bold text-gray-900">Skills & Services</h2>
+<p class="text-gray-600 mt-4 max-w-2xl mx-auto">Specialized expertise across web development, design, and video production</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-8 reveal">
+<!-- Web Development -->
+<div class="bg-gray-50 p-8 rounded-lg">
+<div class="w-16 h-16 flex items-center justify-center bg-blue-100 text-primary rounded-lg mb-6 icon-spin">
+<i class="ri-code-s-slash-line ri-2x"></i>
+</div>
+<h3 class="text-xl font-bold text-gray-900 mb-4">Web Development</h3>
+<p class="text-gray-600 mb-6">Creating responsive, high-performance websites and web applications with modern technologies.</p>
+<div class="space-y-4">
+<div>
+<div class="flex justify-between mb-1">
+<span class="text-sm font-medium text-gray-700">HTML/CSS</span>
+<span class="text-sm font-medium text-gray-700">95%</span>
+</div>
+<div class="skill-bar">
+<div class="skill-progress" style="width: 95%"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between mb-1">
+<span class="text-sm font-medium text-gray-700">JavaScript</span>
+<span class="text-sm font-medium text-gray-700">50%</span>
+</div>
+<div class="skill-bar">
+<div class="skill-progress" style="width: 90%"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between mb-1">
+<span class="text-sm font-medium text-gray-700">React</span>
+<span class="text-sm font-medium text-gray-700">40%</span>
+</div>
+<div class="skill-bar">
+<div class="skill-progress" style="width: 85%"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between mb-1">
+<span class="text-sm font-medium text-gray-700">Vue.js</span>
+<span class="text-sm font-medium text-gray-700">50%</span>
+</div>
+<div class="skill-bar">
+<div class="skill-progress" style="width: 80%"></div>
+</div>
+</div>
+</div>
+</div>
+<!-- Design -->
+<div class="bg-gray-50 p-8 rounded-lg">
+<div class="w-16 h-16 flex items-center justify-center bg-green-100 text-secondary rounded-lg mb-6 icon-spin">
+<i class="ri-palette-line ri-2x"></i>
+</div>
+<h3 class="text-xl font-bold text-gray-900 mb-4">Design</h3>
+<p class="text-gray-600 mb-6">Creating visually stunning and user-friendly interfaces, graphics, and brand identities.</p>
+<div class="space-y-4">
+<div>
+<div class="flex justify-between mb-1">
+<span class="text-sm font-medium text-gray-700">UI/UX Design</span>
+<span class="text-sm font-medium text-gray-700">85%</span>
+</div>
+<div class="skill-bar">
+<div class="skill-progress" style="width: 90%"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between mb-1">
+<span class="text-sm font-medium text-gray-700">Figma</span>
+<span class="text-sm font-medium text-gray-700">70%</span>
+</div>
+<div class="skill-bar">
+<div class="skill-progress" style="width: 95%"></div>
+</div>
+</div>
+</div>
+</div>
+<!-- Video Production -->
+<div class="bg-gray-50 p-8 rounded-lg">
+<div class="w-16 h-16 flex items-center justify-center bg-yellow-100 text-yellow-600 rounded-lg mb-6 icon-spin">
+<i class="ri-movie-line ri-2x"></i>
+</div>
+<h3 class="text-xl font-bold text-gray-900 mb-4">Video Production</h3>
+<p class="text-gray-600 mb-6">Creating engaging video content with professional editing, motion graphics, and animation.</p>
+<div class="space-y-4">
+<div>
+<div class="flex justify-between mb-1">
+<span class="text-sm font-medium text-gray-700">Video Editing</span>
+<span class="text-sm font-medium text-gray-700">85%</span>
+</div>
+<div class="skill-bar">
+<div class="skill-progress" style="width: 90%"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between mb-1">
+<span class="text-sm font-medium text-gray-700">Motion Graphics</span>
+<span class="text-sm font-medium text-gray-700">85%</span>
+</div>
+<div class="skill-bar">
+<div class="skill-progress" style="width: 85%"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between mb-1">
+<span class="text-sm font-medium text-gray-700">After Effects</span>
+<span class="text-sm font-medium text-gray-700">80%</span>
+</div>
+<div class="skill-bar">
+<div class="skill-progress" style="width: 80%"></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- About Me Section -->
+<section id="about" class="py-20 bg-gray-50">
+<div class="container mx-auto px-6">
+<div class="flex flex-col lg:flex-row items-center gap-12">
+<div class="w-full lg:w-1/2 reveal">
+<img src="https://static.readdy.ai/image/643c03466742dd15f8644205dd86fe25/911c27d5be430a519bc3a573ef94d0e6.jpeg" alt="Alex Morgan" class="w-full h-auto rounded-lg shadow-lg animate-pulse">
+</div>
+<div class="w-full lg:w-1/2 reveal">
+<h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-6">About Me</h2>
+<p class="text-gray-600 mb-4">Hello! I'm Feranmi Adeniyi (F.I.S.A), a passionate frontend developer and designer with over 3 years of experience creating digital experiences that users love. Based in Ibadan, Nigeria, I specialize in building responsive websites and intuitive user interfaces that solve real problems for businesses across Africa.</p>
+<p class="text-gray-600 mb-4">My journey into tech started at Appclick Academy, where I was first introduced to the world of web development. It was there I discovered a passion for building things that not only work but also feel good to use. Since then, I’ve worked with startups and clients, turning ideas into functional,
+   user-friendly digital experiences. Every project has taught me something new and pushed me to grow, not just as a developer, but as a problem solver. I'm passionate about bridging the gap between design and functionality, and I’m always looking for new ways to create meaningful, impactful work.</p>
+<p class="text-gray-600 mb-6">When I’m not coding or designing, you’ll find me engaging with communities of developers.... sharing ideas, learning from others, and staying inspired. I believe in the power of collaboration and continuous growth, and I’m always eager to connect with others who are just as passionate about tech as I am.</p>
+<div class="grid grid-cols-2 gap-4 mb-8">
+<div>
+<h3 class="text-lg font-semibold text-gray-900 mb-2">Education</h3>
+<p class="text-gray-600">Appclick Academy</p>
+<p class="text-gray-600">Web Design/ Web Development Program</p>
+</div>
+<div>
+<h3 class="text-lg font-semibold text-gray-900 mb-2">Experience</h3>
+<p class="text-gray-600">3+ Years Professional Experience</p>
+<p class="text-gray-600">Few Completed Projects</p>
+</div>
+<div class="flex space-x-4">
+<a href="https://www.linkedin.com/in/adeniyi-feranmi-42062215b/" class="w-8 h-8 flex items-center justify-center bg-gray-800 text-gray-400 rounded-full hover:bg-primary hover:text-white transition-colors">
+<i class="ri-linkedin-fill"></i>
+</a>
+<a href="https://github.com/bodapablo" class="w-8 h-8 flex items-center justify-center bg-gray-800 text-gray-400 rounded-full hover:bg-primary hover:text-white transition-colors">
+<i class="ri-github-fill"></i>
+</a>
+<a href="https://www.facebook.com/fehranmi20/" class="w-8 h-8 flex items-center justify-center bg-gray-800 text-gray-400 rounded-full hover:bg-primary hover:text-white transition-colors">
+<i class="ri-facebook-fill"></i>
+</a>
+<a href="https://x.com/_BodaPablo" class="w-8 h-8 flex items-center justify-center bg-gray-800 text-gray-400 rounded-full hover:bg-primary hover:text-white transition-colors">
+<i class="ri-twitter-x-fill"></i>
+</a>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Blog Section removed as requested -->
+<!-- Contact Section -->
+
+<section id="contact" class="py-20 bg-gray-50">
+  <div class="container mx-auto px-6">
+    <div class="text-center mb-16 reveal">
+      <h2 class="text-3xl md:text-4xl font-bold text-gray-900">Get In Touch</h2>
+      <p class="text-gray-600 mt-4 max-w-2xl mx-auto">Have a project in mind or want to collaborate? Let's discuss how I can help bring your ideas to life.</p>
+    </div>
+    <div class="flex flex-col lg:flex-row gap-12">
+      <div class="w-full lg:w-1/2 reveal">
+        <form action="https://formspree.io/f/mwpozejr" method="POST" id="contact-form" class="space-y-6">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Name</label>
+              <input type="text" name="name" required class="w-full px-4 py-3 bg-white border border-gray-300 rounded" placeholder="Your name">
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+              <input type="email" name="email" required class="w-full px-4 py-3 bg-white border border-gray-300 rounded" placeholder="Your email">
+            </div>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Subject</label>
+            <input type="text" name="subject" required class="w-full px-4 py-3 bg-white border border-gray-300 rounded" placeholder="Project inquiry">
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Message</label>
+            <textarea name="message" rows="5" required class="w-full px-4 py-3 bg-white border border-gray-300 rounded" placeholder="Tell me about your project..."></textarea>
+          </div>
+          <button type="submit" class="bg-primary text-white px-8 py-3 rounded font-medium hover:bg-blue-600">Send Message</button>
+          <p id="form-status" class="text-sm mt-4"></p>
+        </form>
+      </div>
+      <div class="w-full lg:w-1/2 reveal">
+        <div class="bg-white p-8 rounded-lg shadow-md h-full">
+          <h3 class="text-xl font-bold text-gray-900 mb-4">Contact Information</h3>
+          <p class="text-gray-600 mb-6">Feel free to reach out. I typically respond quickly.</p>
+          <div class="space-y-4">
+            <div class="flex items-center"><strong>Email:</strong>&nbsp;<span>seangabriel61@gmail.com</span></div>
+            <div class="flex items-center"><strong>Phone:</strong>&nbsp;<span>+234 8108032140</span></div>
+            <div class="flex items-center"><strong>Location:</strong>&nbsp;<span>Ibadan, Nigeria</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<script>
+document.getElementById("contact-form").addEventListener("submit", async function(e) {
+  e.preventDefault();
+  const form = e.target;
+  const status = document.getElementById("form-status");
+  const data = new FormData(form);
+  const response = await fetch(form.action, {
+    method: form.method,
+    body: data,
+    headers: { 'Accept': 'application/json' }
+  });
+  if (response.ok) {
+    status.textContent = "Thanks! Your message has been sent.";
+    status.classList.remove("text-red-500");
+    status.classList.add("text-green-600");
+    form.reset();
+  } else {
+    status.textContent = "Oops! Something went wrong.";
+    status.classList.remove("text-green-600");
+    status.classList.add("text-red-500");
+  }
+});
+</script>
+
+<!-- Footer -->
+<footer class="bg-gray-900 text-white py-12">
+<div class="container mx-auto px-6">
+<div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+<div>
+<img src="./Logo-Portfolio.png" alt="">
+<p class="text-gray-400 mb-6">Creating digital experiences that blend form and function seamlessly.</p>
+<div class="flex space-x-4">
+<a href="https://www.linkedin.com/in/adeniyi-feranmi-42062215b/" class="w-8 h-8 flex items-center justify-center bg-gray-800 text-gray-400 rounded-full hover:bg-primary hover:text-white transition-colors">
+<i class="ri-linkedin-fill"></i>
+</a>
+<a href="https://github.com/bodapablo" class="w-8 h-8 flex items-center justify-center bg-gray-800 text-gray-400 rounded-full hover:bg-primary hover:text-white transition-colors">
+<i class="ri-github-fill"></i>
+</a>
+<a href="https://www.facebook.com/fehranmi20/" class="w-8 h-8 flex items-center justify-center bg-gray-800 text-gray-400 rounded-full hover:bg-primary hover:text-white transition-colors">
+<i class="ri-facebook-fill"></i>
+</a>
+<a href="https://x.com/_BodaPablo" class="w-8 h-8 flex items-center justify-center bg-gray-800 text-gray-400 rounded-full hover:bg-primary hover:text-white transition-colors">
+<i class="ri-twitter-x-fill"></i>
+</a>
+</div>
+</div>
+<div>
+<h3 class="text-lg font-semibold mb-4">Quick Links</h3>
+<ul class="space-y-2">
+<li><a href="#work" class="text-gray-400 hover:text-white transition-colors">Work</a></li>
+<li><a href="#services" class="text-gray-400 hover:text-white transition-colors">Services</a></li>
+<li><a href="#about" class="text-gray-400 hover:text-white transition-colors">About</a></li>
+<!-- Blog link removed -->
+<li><a href="#contact" class="text-gray-400 hover:text-white transition-colors">Contact</a></li>
+</ul>
+</div>
+<div>
+<h3 class="text-lg font-semibold mb-4">Services</h3>
+<ul class="space-y-2">
+<li><a href="#" class="text-gray-400 hover:text-white transition-colors">Web Design/Development</a></li>
+<li><a href="#" class="text-gray-400 hover:text-white transition-colors">UI/UX Design</a></li>
+<li><a href="#" class="text-gray-400 hover:text-white transition-colors">Graphic Design</a></li>
+<li><a href="#" class="text-gray-400 hover:text-white transition-colors">Video Editing</a></li>
+</ul>
+</div>
+</div>
+<div class="pt-8 border-t border-gray-800 flex flex-col md:flex-row justify-between items-center">
+<p class="text-gray-400 text-sm">© 2025 F.I.S.A All rights reserved.</p>
+<div class="flex space-x-4 mt-4 md:mt-0">
+<a href="#" class="text-gray-400 text-sm hover:text-white transition-colors">Privacy Policy</a>
+<a href="#" class="text-gray-400 text-sm hover:text-white transition-colors">Terms of Service</a>
+<a href="#" class="text-gray-400 text-sm hover:text-white transition-colors">Cookie Policy</a>
+</div>
+</div>
+</div>
+</footer>
+<script>
+// Navigation background change on scroll
+window.addEventListener('scroll', function() {
+const nav = document.querySelector('nav');
+if (window.scrollY > 20) {
+nav.classList.add('bg-black', 'shadow-md');
+nav.classList.remove('bg-transparent');
+} else {
+nav.classList.add('bg-transparent');
+nav.classList.remove('bg-black', 'shadow-md');
+}
+// Reveal animations on scroll
+const reveals = document.querySelectorAll('.reveal');
+reveals.forEach(element => {
+const elementTop = element.getBoundingClientRect().top;
+const windowHeight = window.innerHeight;
+if (elementTop < windowHeight - 100) {
+element.classList.add('active');
+}
+});
+// Animate skill bars when in view
+const skillBars = document.querySelectorAll('.skill-progress');
+skillBars.forEach(bar => {
+const barTop = bar.getBoundingClientRect().top;
+const windowHeight = window.innerHeight;
+if (barTop < windowHeight - 50) {
+const width = bar.parentElement.previousElementSibling.lastElementChild.textContent;
+bar.style.width = width;
+}
+});
+});
+// Portfolio filter functionality
+const filterButtons = document.querySelectorAll('.filter-button');
+filterButtons.forEach(button => {
+button.addEventListener('click', function() {
+filterButtons.forEach(btn => btn.classList.remove('active', 'bg-primary', 'text-white'));
+filterButtons.forEach(btn => btn.classList.add('bg-white', 'text-gray-700'));
+this.classList.add('active', 'bg-primary', 'text-white');
+this.classList.remove('bg-white', 'text-gray-700');
+});
+});
+// Dark/Light mode toggle
+const modeToggle = document.querySelector('.mode-toggle input');
+const body = document.body;
+const isDarkMode = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+// Set initial mode based on system preference
+if (isDarkMode) {
+  body.classList.add('dark-mode');
+  modeToggle.checked = true;
+  applyDarkMode();
+}
+
+modeToggle.addEventListener('change', function() {
+  if (this.checked) {
+    applyDarkMode();
+  } else {
+    applyLightMode();
+  }
+});
+
+function applyDarkMode() {
+  document.documentElement.classList.add('dark');
+  
+  // Update background colors
+  document.querySelectorAll('.bg-white').forEach(el => {
+    el.classList.remove('bg-white');
+    el.classList.add('bg-gray-800');
+  });
+  
+  document.querySelectorAll('.bg-gray-50').forEach(el => {
+    el.classList.remove('bg-gray-50');
+    el.classList.add('bg-gray-900');
+  });
+  
+  // Update text colors
+  document.querySelectorAll('.text-gray-900').forEach(el => {
+    el.classList.remove('text-gray-900');
+    el.classList.add('text-white');
+  });
+  
+  document.querySelectorAll('.text-gray-600, .text-gray-700').forEach(el => {
+    el.classList.remove('text-gray-600', 'text-gray-700');
+    el.classList.add('text-gray-300');
+  });
+  
+  // Update form elements
+  document.querySelectorAll('input, textarea').forEach(el => {
+    if (el.classList.contains('bg-white')) {
+      el.classList.remove('bg-white');
+      el.classList.add('bg-gray-700');
+    }
+    if (el.classList.contains('border-gray-300')) {
+      el.classList.remove('border-gray-300');
+      el.classList.add('border-gray-600');
+    }
+  });
+  
+  // Update skill bars
+  document.querySelectorAll('.skill-bar').forEach(el => {
+    el.classList.add('bg-gray-700');
+    el.classList.remove('bg-gray-200', 'bg-gray-300', 'bg-e5e7eb');
+  });
+}
+
+function applyLightMode() {
+  document.documentElement.classList.remove('dark');
+  
+  // Update background colors
+  document.querySelectorAll('.bg-gray-800').forEach(el => {
+    el.classList.remove('bg-gray-800');
+    el.classList.add('bg-white');
+  });
+  
+  document.querySelectorAll('.bg-gray-900').forEach(el => {
+    el.classList.remove('bg-gray-900');
+    el.classList.add('bg-gray-50');
+  });
+  
+  // Update text colors
+  document.querySelectorAll('.text-white').forEach(el => {
+    if (!el.closest('.hero-section') && !el.closest('footer') && !el.closest('.project-overlay')) {
+      el.classList.remove('text-white');
+      el.classList.add('text-gray-900');
+    }
+  });
+  
+  document.querySelectorAll('.text-gray-300').forEach(el => {
+    el.classList.remove('text-gray-300');
+    el.classList.add('text-gray-600');
+  });
+  
+  // Update form elements
+  document.querySelectorAll('input, textarea').forEach(el => {
+    if (el.classList.contains('bg-gray-700')) {
+      el.classList.remove('bg-gray-700');
+      el.classList.add('bg-white');
+    }
+    if (el.classList.contains('border-gray-600')) {
+      el.classList.remove('border-gray-600');
+      el.classList.add('border-gray-300');
+    }
+  });
+  
+  // Update skill bars
+  document.querySelectorAll('.skill-bar').forEach(el => {
+    el.classList.remove('bg-gray-700');
+    el.classList.add('bg-e5e7eb');
+  });
+}
+// Smooth scrolling for anchor links
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+anchor.addEventListener('click', function(e) {
+e.preventDefault();
+const target = document.querySelector(this.getAttribute('href'));
+if (target) {
+window.scrollTo({
+top: target.offsetTop - 80,
+behavior: 'smooth'
+});
+}
+});
+});
+// Hero section slider functionality
+let currentSlide = 0;
+const slides = document.querySelectorAll('.slide');
+const slidesWrapper = document.querySelector('.slides-wrapper');
+const dots = document.querySelectorAll('.slider-dot');
+const totalSlides = slides.length;
+function updateSlider() {
+slidesWrapper.style.transform = `translateX(-${currentSlide * 100}%)`;
+dots.forEach((dot, index) => {
+if (index === currentSlide) {
+dot.classList.add('bg-white');
+dot.classList.remove('bg-opacity-50');
+} else {
+dot.classList.remove('bg-white');
+dot.classList.add('bg-opacity-50');
+}
+});
+}
+function nextSlide() {
+currentSlide = (currentSlide + 1) % totalSlides;
+updateSlider();
+}
+// Auto slide every 5 seconds
+let slideInterval = setInterval(nextSlide, 5000);
+// Click on dots to navigate to specific slide
+dots.forEach(dot => {
+dot.addEventListener('click', function() {
+currentSlide = parseInt(this.getAttribute('data-index'));
+updateSlider();
+// Reset interval when manually changing slides
+clearInterval(slideInterval);
+slideInterval = setInterval(nextSlide, 5000);
+});
+});
+// Initialize animations on page load
+document.addEventListener('DOMContentLoaded', function() {
+// Trigger initial reveal check
+const scrollEvent = new Event('scroll');
+window.dispatchEvent(scrollEvent);
+// Initialize slider
+updateSlider();
+});
+</script>
+</body>
+</html>
