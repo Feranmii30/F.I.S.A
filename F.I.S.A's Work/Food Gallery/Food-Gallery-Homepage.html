@@ -1,0 +1,2002 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chef Hub | Food Inspiration</title>
+<script src="https://cdn.tailwindcss.com/3.4.16"></script>
+<script>tailwind.config={theme:{extend:{colors:{primary:'#FF6B35',secondary:'#2EC4B6'},borderRadius:{'none':'0px','sm':'4px',DEFAULT:'8px','md':'12px','lg':'16px','xl':'20px','2xl':'24px','3xl':'32px','full':'9999px','button':'8px'}}}}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css" rel="stylesheet">
+<style>
+:where([class^="ri-"])::before { content: "\f3c2"; }
+body {
+font-family: 'Poppins', sans-serif;
+}
+.masonry-grid {
+display: grid;
+grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+grid-auto-rows: 10px;
+grid-gap: 16px;
+}
+@media (max-width: 640px) {
+  .masonry-grid {
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    grid-gap: 12px;
+  }
+}
+.masonry-item {
+grid-row-end: span calc(var(--span) * 0.48);
+}
+input[type="search"]::-webkit-search-decoration,
+input[type="search"]::-webkit-search-cancel-button,
+input[type="search"]::-webkit-search-results-button,
+input[type="search"]::-webkit-search-results-decoration {
+display: none;
+}
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+-webkit-appearance: none;
+margin: 0;
+}
+.custom-checkbox {
+display: flex;
+align-items: center;
+cursor: pointer;
+}
+.custom-checkbox input {
+position: absolute;
+opacity: 0;
+cursor: pointer;
+}
+.checkmark {
+height: 20px;
+width: 20px;
+background-color: #fff;
+border: 2px solid #e5e7eb;
+border-radius: 4px;
+display: flex;
+align-items: center;
+justify-content: center;
+}
+.custom-checkbox input:checked ~ .checkmark {
+background-color: #FF6B35;
+border-color: #FF6B35;
+}
+.checkmark:after {
+content: "";
+display: none;
+}
+.custom-checkbox input:checked ~ .checkmark:after {
+display: block;
+width: 5px;
+height: 10px;
+border: solid white;
+border-width: 0 2px 2px 0;
+transform: rotate(45deg);
+}
+.hero-slider {
+position: relative;
+overflow: hidden;
+height: 500px;
+}
+@media (max-width: 768px) {
+  .hero-slider {
+    height: 400px;
+  }
+}
+@media (max-width: 640px) {
+  .hero-slider {
+    height: 350px;
+  }
+}
+.slider-item {
+position: absolute;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+opacity: 0;
+transition: opacity 0.8s ease-in-out;
+visibility: hidden;
+}
+.slider-item.active {
+opacity: 1;
+visibility: visible;
+}
+.modal {
+display: none;
+position: fixed;
+z-index: 50;
+left: 0;
+top: 0;
+width: 100%;
+height: 100%;
+overflow: auto;
+background-color: rgba(0,0,0,0.7);
+}
+.modal-content {
+background-color: #fff;
+margin: 5% auto;
+max-width: 900px;
+width: 95%;
+border-radius: 8px;
+overflow: hidden;
+animation: modalFadeIn 0.3s;
+}
+@media (max-width: 640px) {
+  .modal-content {
+    margin: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 0;
+    max-height: 100vh;
+  }
+}
+@keyframes modalFadeIn {
+from {opacity: 0; transform: translateY(-20px);}
+to {opacity: 1; transform: translateY(0);}
+}
+</style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+<!-- Header Navigation -->
+<header class="sticky top-0 z-40 bg-white shadow-sm">
+<div class="container mx-auto px-4 py-3">
+<div class="flex justify-between items-center">
+<!-- Logo -->
+<a href="#" class="inline-block">
+<img src="https://static.readdy.ai/image/685839bcded31a203a7d44ffe3566552/c5cd371de40c9afda1372b7b6bfb8a45.png" alt="Chef Hub" class="h-12">
+</a>
+<!-- Main Navigation -->
+<nav class="hidden md:flex space-x-8">
+<a href="#" class="font-medium text-primary border-b-2 border-primary">Home</a>
+<a href="#" class="font-medium text-gray-700 hover:text-primary transition-colors">Categories</a>
+<a href="#" class="font-medium text-gray-700 hover:text-primary transition-colors">Popular</a>
+<a href="#" class="font-medium text-gray-700 hover:text-primary transition-colors">Latest</a>
+</nav>
+<!-- Mobile Navigation Drawer (Hidden by default) -->
+<div id="mobileNav" class="fixed inset-0 bg-black/50 z-50 hidden">
+  <div class="bg-white h-full w-4/5 max-w-sm p-6 transform transition-transform duration-300 translate-x-0">
+    <div class="flex justify-between items-center mb-8">
+      <img src="https://static.readdy.ai/image/685839bcded31a203a7d44ffe3566552/c5cd371de40c9afda1372b7b6bfb8a45.png" alt="Chef Hub" class="h-10">
+      <button id="closeMobileNav" class="w-10 h-10 flex items-center justify-center text-gray-700">
+        <i class="ri-close-line ri-lg"></i>
+      </button>
+    </div>
+    <nav class="flex flex-col space-y-4">
+      <a href="#" class="font-medium text-primary border-l-4 border-primary pl-3 py-2">Home</a>
+      <a href="#" class="font-medium text-gray-700 hover:text-primary transition-colors pl-3 py-2 hover:border-l-4 hover:border-primary">Categories</a>
+      <a href="#" class="font-medium text-gray-700 hover:text-primary transition-colors pl-3 py-2 hover:border-l-4 hover:border-primary">Popular</a>
+      <a href="#" class="font-medium text-gray-700 hover:text-primary transition-colors pl-3 py-2 hover:border-l-4 hover:border-primary">Latest</a>
+      <div class="border-t border-gray-200 my-4"></div>
+      <a href="#" class="font-medium text-gray-700 hover:text-primary transition-colors pl-3 py-2 flex items-center">
+        <i class="ri-user-line mr-3"></i> My Profile
+      </a>
+      <a href="#" class="font-medium text-gray-700 hover:text-primary transition-colors pl-3 py-2 flex items-center">
+        <i class="ri-heart-line mr-3"></i> Favorites
+      </a>
+      <a href="#" class="font-medium text-gray-700 hover:text-primary transition-colors pl-3 py-2 flex items-center">
+        <i class="ri-settings-line mr-3"></i> Settings
+      </a>
+    </nav>
+  </div>
+</div>
+<!-- Right Actions -->
+<div class="flex items-center space-x-4">
+<!-- Search Button -->
+<button id="searchToggle" class="w-10 h-10 flex items-center justify-center text-gray-700 hover:text-primary transition-colors">
+<i class="ri-search-line ri-lg"></i>
+</button>
+<!-- User Profile -->
+<div class="relative">
+<button id="profileDropdown" class="w-10 h-10 flex items-center justify-center rounded-full bg-gray-100 hover:bg-gray-200 transition-colors">
+<i class="ri-user-line ri-lg"></i>
+</button>
+</div>
+<!-- Mobile Menu Button -->
+<button id="mobileMenuBtn" class="md:hidden w-10 h-10 flex items-center justify-center">
+<i class="ri-menu-line ri-lg"></i>
+</button>
+</div>
+</div>
+</div>
+<!-- Search Bar (Hidden by default) -->
+<div id="searchBar" class="hidden bg-gray-100 py-3">
+<div class="container mx-auto px-4">
+<div class="relative">
+<input type="search" placeholder="Search for delicious dishes..." class="w-full pl-10 pr-4 py-2 rounded-full border-none focus:outline-none focus:ring-2 focus:ring-primary text-sm">
+<div class="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 flex items-center justify-center text-gray-500">
+<i class="ri-search-line"></i>
+</div>
+</div>
+</div>
+</div>
+</header>
+<!-- Hero Section with Carousel -->
+<section class="hero-slider relative">
+<div class="slider-item active">
+<div class="relative h-full">
+<img src="https://public.readdy.ai/ai/img_res/232cf217e63e18e834a52f004f57f43a.jpg" alt="Gourmet Pasta" class="w-full h-full object-cover">
+<div class="absolute inset-0 bg-gradient-to-r from-black/70 to-transparent flex items-center">
+<div class="container mx-auto px-4">
+<div class="max-w-xl text-white">
+<span class="inline-block px-3 py-1 bg-primary text-white text-sm font-medium rounded-full mb-4">Trending Now</span>
+<h1 class="text-3xl sm:text-4xl md:text-5xl font-bold mb-4">Discover Culinary Masterpieces</h1>
+<p class="text-base sm:text-lg mb-6">Explore our curated collection of the world's most beautiful and delicious dishes</p>
+<button class="bg-primary hover:bg-primary/90 text-white px-4 sm:px-6 py-2 sm:py-3 rounded-button font-medium transition-colors whitespace-nowrap">Browse Gallery</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="slider-item">
+<div class="relative h-full">
+<img src="https://public.readdy.ai/ai/img_res/6c5d50a29fd1916540136fbcf6f269c2.jpg" alt="Charcuterie Board" class="w-full h-full object-cover">
+<div class="absolute inset-0 bg-gradient-to-r from-black/70 to-transparent flex items-center">
+<div class="container mx-auto px-4">
+<div class="max-w-xl text-white">
+<span class="inline-block px-3 py-1 bg-primary text-white text-sm font-medium rounded-full mb-4">Featured Collection</span>
+<h1 class="text-4xl md:text-5xl font-bold mb-4">Artisanal Food Experiences</h1>
+<p class="text-lg mb-6">Indulge in handcrafted delicacies from award-winning chefs around the world</p>
+<button class="bg-primary hover:bg-primary/90 text-white px-6 py-3 rounded-button font-medium transition-colors whitespace-nowrap">Explore Recipes</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="slider-item">
+<div class="relative h-full">
+<img src="https://public.readdy.ai/ai/img_res/77c4ee0ce8a8a209e7b8e711a113372f.jpg" alt="Asian Bowl" class="w-full h-full object-cover">
+<div class="absolute inset-0 bg-gradient-to-r from-black/70 to-transparent flex items-center">
+<div class="container mx-auto px-4">
+<div class="max-w-xl text-white">
+<span class="inline-block px-3 py-1 bg-primary text-white text-sm font-medium rounded-full mb-4">New Arrivals</span>
+<h1 class="text-4xl md:text-5xl font-bold mb-4">Global Flavors Reimagined</h1>
+<p class="text-lg mb-6">Discover innovative fusion dishes that blend culinary traditions from around the globe</p>
+<button class="bg-primary hover:bg-primary/90 text-white px-6 py-3 rounded-button font-medium transition-colors whitespace-nowrap">View Collection</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Carousel controls -->
+<div class="absolute bottom-5 left-1/2 transform -translate-x-1/2 flex space-x-2">
+<button class="carousel-dot w-3 h-3 rounded-full bg-white opacity-100" data-index="0"></button>
+<button class="carousel-dot w-3 h-3 rounded-full bg-white opacity-50" data-index="1"></button>
+<button class="carousel-dot w-3 h-3 rounded-full bg-white opacity-50" data-index="2"></button>
+</div>
+</section>
+<!-- Category Quick Filters -->
+<section class="bg-white sticky top-16 z-30 shadow-sm">
+<div class="container mx-auto px-4">
+<div class="py-4 flex justify-between items-center">
+<div class="flex overflow-x-auto space-x-3 pb-1 no-scrollbar scrollbar-hide">
+<button class="bg-primary text-white px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap">All Dishes</button>
+<button class="bg-gray-100 hover:bg-gray-200 text-gray-800 px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-colors">Italian</button>
+<button class="bg-gray-100 hover:bg-gray-200 text-gray-800 px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-colors">Asian</button>
+<button class="bg-gray-100 hover:bg-gray-200 text-gray-800 px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-colors">Mexican</button>
+<button class="bg-gray-100 hover:bg-gray-200 text-gray-800 px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-colors">Mediterranean</button>
+<button class="bg-gray-100 hover:bg-gray-200 text-gray-800 px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-colors">Desserts</button>
+</div>
+<div class="flex items-center space-x-3">
+<div class="relative">
+<button id="sortDropdown" class="flex items-center space-x-1 text-gray-700 hover:text-primary transition-colors">
+<span class="text-sm font-medium">Popular</span>
+<div class="w-4 h-4 flex items-center justify-center">
+<i class="ri-arrow-down-s-line"></i>
+</div>
+</button>
+</div>
+<button id="filterButton" class="flex items-center space-x-1 text-gray-700 hover:text-primary transition-colors">
+<div class="w-5 h-5 flex items-center justify-center">
+<i class="ri-filter-3-line"></i>
+</div>
+<span class="text-sm font-medium hidden md:inline">Filters</span>
+</button>
+</div>
+</div>
+</div>
+</section>
+<!-- Advanced Filter Panel (Hidden by default) -->
+<section id="advancedFilters" class="hidden bg-white border-t border-gray-200 shadow-md">
+<div class="container mx-auto px-4 py-6">
+<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+<div>
+<h3 class="font-medium text-gray-900 mb-3">Dietary Preferences</h3>
+<div class="space-y-2">
+<label class="custom-checkbox flex items-center">
+<input type="checkbox">
+<span class="checkmark mr-2"></span>
+<span class="text-sm">Vegetarian</span>
+</label>
+<label class="custom-checkbox flex items-center">
+<input type="checkbox">
+<span class="checkmark mr-2"></span>
+<span class="text-sm">Vegan</span>
+</label>
+<label class="custom-checkbox flex items-center">
+<input type="checkbox">
+<span class="checkmark mr-2"></span>
+<span class="text-sm">Gluten-Free</span>
+</label>
+<label class="custom-checkbox flex items-center">
+<input type="checkbox">
+<span class="checkmark mr-2"></span>
+<span class="text-sm">Dairy-Free</span>
+</label>
+</div>
+</div>
+<div>
+<h3 class="font-medium text-gray-900 mb-3">Meal Type</h3>
+<div class="space-y-2">
+<label class="custom-checkbox flex items-center">
+<input type="checkbox">
+<span class="checkmark mr-2"></span>
+<span class="text-sm">Breakfast</span>
+</label>
+<label class="custom-checkbox flex items-center">
+<input type="checkbox">
+<span class="checkmark mr-2"></span>
+<span class="text-sm">Lunch</span>
+</label>
+<label class="custom-checkbox flex items-center">
+<input type="checkbox">
+<span class="checkmark mr-2"></span>
+<span class="text-sm">Dinner</span>
+</label>
+<label class="custom-checkbox flex items-center">
+<input type="checkbox">
+<span class="checkmark mr-2"></span>
+<span class="text-sm">Dessert</span>
+</label>
+</div>
+</div>
+<div>
+<h3 class="font-medium text-gray-900 mb-3">Preparation Time</h3>
+<div class="space-y-2">
+<label class="custom-checkbox flex items-center">
+<input type="checkbox">
+<span class="checkmark mr-2"></span>
+<span class="text-sm">Under 15 minutes</span>
+</label>
+<label class="custom-checkbox flex items-center">
+<input type="checkbox">
+<span class="checkmark mr-2"></span>
+<span class="text-sm">15-30 minutes</span>
+</label>
+<label class="custom-checkbox flex items-center">
+<input type="checkbox">
+<span class="checkmark mr-2"></span>
+<span class="text-sm">30-60 minutes</span>
+</label>
+<label class="custom-checkbox flex items-center">
+<input type="checkbox">
+<span class="checkmark mr-2"></span>
+<span class="text-sm">Over 60 minutes</span>
+</label>
+</div>
+</div>
+</div>
+<div class="flex justify-end mt-6 space-x-3">
+<button class="px-4 py-2 text-sm font-medium text-gray-700 hover:text-gray-900 transition-colors whitespace-nowrap">Clear All</button>
+<button class="bg-primary hover:bg-primary/90 text-white px-4 py-2 rounded-button text-sm font-medium transition-colors whitespace-nowrap">Apply Filters</button>
+</div>
+</div>
+</section>
+<!-- Main Content Grid -->
+<main class="container mx-auto px-4 py-8">
+<div id="masonry-container" class="masonry-grid">
+<!-- Food Item 1 -->
+<div class="masonry-item bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow cursor-pointer food-card" style="--span: 24;">
+<div class="relative">
+<img src="https://public.readdy.ai/ai/img_res/35d22330ca51264edce4343579d1ba93.jpg" alt="Sushi Assortment" class="w-full h-auto object-cover">
+<button class="absolute top-3 right-3 w-8 h-8 rounded-full bg-white/80 backdrop-blur-sm flex items-center justify-center text-gray-700 hover:text-primary transition-colors">
+<i class="ri-heart-line"></i>
+</button>
+<div class="absolute inset-0 bg-black/60 opacity-0 hover:opacity-100 transition-opacity flex items-center justify-center">
+<button class="bg-primary hover:bg-primary/90 text-white px-4 py-2 rounded-button font-medium transition-colors whitespace-nowrap">View Details</button>
+</div>
+</div>
+<div class="p-4">
+<h3 class="font-semibold text-lg text-gray-900">Signature Sushi Platter</h3>
+<p class="text-gray-600 text-sm mt-1">Assortment of fresh nigiri and maki rolls with premium seafood</p>
+<div class="flex items-center mt-3">
+<div class="w-6 h-6 rounded-full bg-gray-300 flex items-center justify-center">
+<i class="ri-user-line ri-xs text-gray-500"></i>
+</div>
+<span class="text-xs text-gray-700 ml-2">Chef Feranmi</span>
+</div>
+<div class="flex justify-between items-center mt-3">
+<div class="flex items-center">
+<div class="w-4 h-4 flex items-center justify-center text-primary">
+<i class="ri-star-fill"></i>
+</div>
+<span class="text-xs ml-1">4.9</span>
+</div>
+<button class="text-xs text-primary font-medium hover:underline">View Recipe</button>
+</div>
+</div>
+</div>
+<!-- Food Item 2 -->
+<div class="masonry-item bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow cursor-pointer food-card" style="--span: 21;">
+<div class="relative">
+<img src="https://public.readdy.ai/ai/img_res/ffd0fce3714a03e866e5b13f3f1122e4.jpg" alt="Steak Dinner" class="w-full h-auto object-cover">
+<button class="absolute top-3 right-3 w-8 h-8 rounded-full bg-white/80 backdrop-blur-sm flex items-center justify-center text-gray-700 hover:text-primary transition-colors">
+<i class="ri-heart-line"></i>
+</button>
+<div class="absolute inset-0 bg-black/60 opacity-0 hover:opacity-100 transition-opacity flex items-center justify-center">
+<button class="bg-primary hover:bg-primary/90 text-white px-4 py-2 rounded-button font-medium transition-colors whitespace-nowrap">View Details</button>
+</div>
+</div>
+<div class="p-4">
+<h3 class="font-semibold text-lg text-gray-900">Ribeye Steak with Red Wine Reduction</h3>
+<p class="text-gray-600 text-sm mt-1">Perfectly seared ribeye with seasonal vegetables</p>
+<div class="flex items-center mt-3">
+<div class="w-6 h-6 rounded-full bg-gray-300 flex items-center justify-center">
+<i class="ri-user-line ri-xs text-gray-500"></i>
+</div>
+<span class="text-xs text-gray-700 ml-2">Chef Feranmi</span>
+</div>
+<div class="flex justify-between items-center mt-3">
+<div class="flex items-center">
+<div class="w-4 h-4 flex items-center justify-center text-primary">
+<i class="ri-star-fill"></i>
+</div>
+<span class="text-xs ml-1">4.8</span>
+</div>
+<button class="text-xs text-primary font-medium hover:underline">View Recipe</button>
+</div>
+</div>
+</div>
+<!-- Food Item 3 -->
+<div class="masonry-item bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow cursor-pointer food-card" style="--span: 24;">
+<div class="relative">
+<img src="https://public.readdy.ai/ai/img_res/e055eed736c225a76d4a26b95e968244.jpg" alt="Mediterranean Mezze" class="w-full h-auto object-cover">
+<button class="absolute top-3 right-3 w-8 h-8 rounded-full bg-white/80 backdrop-blur-sm flex items-center justify-center text-gray-700 hover:text-primary transition-colors">
+<i class="ri-heart-fill text-primary"></i>
+</button>
+<div class="absolute inset-0 bg-black/60 opacity-0 hover:opacity-100 transition-opacity flex items-center justify-center">
+<button class="bg-primary hover:bg-primary/90 text-white px-4 py-2 rounded-button font-medium transition-colors whitespace-nowrap">View Details</button>
+</div>
+</div>
+<div class="p-4">
+<h3 class="font-semibold text-lg text-gray-900">Mediterranean Mezze Platter</h3>
+<p class="text-gray-600 text-sm mt-1">Traditional selection of hummus, baba ganoush, falafel, and fresh pita</p>
+<div class="flex items-center mt-3">
+<div class="w-6 h-6 rounded-full bg-gray-300 flex items-center justify-center">
+<i class="ri-user-line ri-xs text-gray-500"></i>
+</div>
+<span class="text-xs text-gray-700 ml-2">Chef Feranmi</span>
+</div>
+<div class="flex justify-between items-center mt-3">
+<div class="flex items-center">
+<div class="w-4 h-4 flex items-center justify-center text-primary">
+<i class="ri-star-fill"></i>
+</div>
+<span class="text-xs ml-1">4.7</span>
+</div>
+<button class="text-xs text-primary font-medium hover:underline">View Recipe</button>
+</div>
+</div>
+</div>
+<!-- Food Item 4 -->
+<div class="masonry-item bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow cursor-pointer food-card" style="--span: 24;">
+<div class="relative">
+<img src="https://public.readdy.ai/ai/img_res/7891a06d4a5a70801222bb3e43852bc9.jpg" alt="Thai Green Curry" class="w-full h-auto object-cover"><button class="absolute top-3 right-3 w-8 h-8 rounded-full bg-white/80 backdrop-blur-sm flex items-center justify-center text-gray-700 hover:text-primary transition-colors">
+<i class="ri-heart-line"></i>
+</button>
+<div class="absolute inset-0 bg-black/60 opacity-0 hover:opacity-100 transition-opacity flex items-center justify-center">
+<button class="bg-primary hover:bg-primary/90 text-white px-4 py-2 rounded-button font-medium transition-colors whitespace-nowrap">View Details</button>
+</div>
+</div>
+<div class="p-4">
+<h3 class="font-semibold text-lg text-gray-900">Authentic Thai Green Curry</h3>
+<p class="text-gray-600 text-sm mt-1">Aromatic curry with coconut milk, lemongrass, and fresh Thai basil</p>
+<div class="flex items-center mt-3">
+<div class="w-6 h-6 rounded-full bg-gray-300 flex items-center justify-center">
+<i class="ri-user-line ri-xs text-gray-500"></i>
+</div>
+<span class="text-xs text-gray-700 ml-2">Chef Feranmi</span>
+</div>
+<div class="flex justify-between items-center mt-3">
+<div class="flex items-center">
+<div class="w-4 h-4 flex items-center justify-center text-primary">
+<i class="ri-star-fill"></i>
+</div>
+<span class="text-xs ml-1">4.9</span>
+</div>
+<button class="text-xs text-primary font-medium hover:underline">View Recipe</button>
+</div>
+</div>
+</div>
+<!-- Food Item 5 -->
+<div class="masonry-item bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow cursor-pointer food-card" style="--span: 21;">
+<div class="relative">
+<img src="https://public.readdy.ai/ai/img_res/87deee4e69116cd8927aa5a296d9c056.jpg" alt="Chocolate Lava Cake" class="w-full h-auto object-cover">
+<button class="absolute top-3 right-3 w-8 h-8 rounded-full bg-white/80 backdrop-blur-sm flex items-center justify-center text-gray-700 hover:text-primary transition-colors">
+<i class="ri-heart-line"></i>
+</button>
+<div class="absolute inset-0 bg-black/60 opacity-0 hover:opacity-100 transition-opacity flex items-center justify-center">
+<button class="bg-primary hover:bg-primary/90 text-white px-4 py-2 rounded-button font-medium transition-colors whitespace-nowrap">View Details</button>
+</div>
+</div>
+<div class="p-4">
+<h3 class="font-semibold text-lg text-gray-900">Chocolate Lava Cake</h3>
+<p class="text-gray-600 text-sm mt-1">Warm chocolate cake with a molten center, served with vanilla ice cream</p>
+<div class="flex items-center mt-3">
+<div class="w-6 h-6 rounded-full bg-gray-300 flex items-center justify-center">
+<i class="ri-user-line ri-xs text-gray-500"></i>
+</div>
+<span class="text-xs text-gray-700 ml-2">Chef Feranmi</span>
+</div>
+<div class="flex justify-between items-center mt-3">
+<div class="flex items-center">
+<div class="w-4 h-4 flex items-center justify-center text-primary">
+<i class="ri-star-fill"></i>
+</div>
+<span class="text-xs ml-1">4.9</span>
+</div>
+<button class="text-xs text-primary font-medium hover:underline">View Recipe</button>
+</div>
+</div>
+</div>
+<!-- Food Item 6 -->
+<div class="masonry-item bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow cursor-pointer food-card" style="--span: 24;">
+<div class="relative">
+<img src="https://public.readdy.ai/ai/img_res/694fb02979fefdf60d4e2b6829bdcc8f.jpg" alt="Taco Spread" class="w-full h-auto object-cover">
+<button class="absolute top-3 right-3 w-8 h-8 rounded-full bg-white/80 backdrop-blur-sm flex items-center justify-center text-gray-700 hover:text-primary transition-colors">
+<i class="ri-heart-fill text-primary"></i>
+</button>
+<div class="absolute inset-0 bg-black/60 opacity-0 hover:opacity-100 transition-opacity flex items-center justify-center">
+<button class="bg-primary hover:bg-primary/90 text-white px-4 py-2 rounded-button font-medium transition-colors whitespace-nowrap">View Details</button>
+</div>
+</div>
+<div class="p-4">
+<h3 class="font-semibold text-lg text-gray-900">Authentic Street Tacos</h3>
+<p class="text-gray-600 text-sm mt-1">Handmade corn tortillas with various fillings and fresh salsas</p>
+<div class="flex items-center mt-3">
+<div class="w-6 h-6 rounded-full bg-gray-300 flex items-center justify-center">
+<i class="ri-user-line ri-xs text-gray-500"></i>
+</div>
+<span class="text-xs text-gray-700 ml-2">Chef Feranmi</span>
+</div>
+<div class="flex justify-between items-center mt-3">
+<div class="flex items-center">
+<div class="w-4 h-4 flex items-center justify-center text-primary">
+<i class="ri-star-fill"></i>
+</div>
+<span class="text-xs ml-1">4.8</span>
+</div>
+<button class="text-xs text-primary font-medium hover:underline">View Recipe</button>
+</div>
+</div>
+</div>
+<!-- Food Item 7 -->
+<div class="masonry-item bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow cursor-pointer food-card" style="--span: 23;">
+<div class="relative">
+<img src="https://public.readdy.ai/ai/img_res/36404d8508255cef0e23024b144fd1fc.jpg" alt="Ramen Bowl" class="w-full h-auto object-cover">
+<button class="absolute top-3 right-3 w-8 h-8 rounded-full bg-white/80 backdrop-blur-sm flex items-center justify-center text-gray-700 hover:text-primary transition-colors">
+<i class="ri-heart-line"></i>
+</button>
+<div class="absolute inset-0 bg-black/60 opacity-0 hover:opacity-100 transition-opacity flex items-center justify-center">
+<button class="bg-primary hover:bg-primary/90 text-white px-4 py-2 rounded-button font-medium transition-colors whitespace-nowrap">View Details</button>
+</div>
+</div>
+<div class="p-4">
+<h3 class="font-semibold text-lg text-gray-900">Tonkotsu Ramen</h3>
+<p class="text-gray-600 text-sm mt-1">Rich pork bone broth with chashu, soft egg, and fresh noodles</p>
+<div class="flex items-center mt-3">
+<div class="w-6 h-6 rounded-full bg-gray-300 flex items-center justify-center">
+<i class="ri-user-line ri-xs text-gray-500"></i>
+</div>
+<span class="text-xs text-gray-700 ml-2">Chef Feranmi</span>
+</div>
+<div class="flex justify-between items-center mt-3">
+<div class="flex items-center">
+<div class="w-4 h-4 flex items-center justify-center text-primary">
+<i class="ri-star-fill"></i>
+</div>
+<span class="text-xs ml-1">4.7</span>
+</div>
+<button class="text-xs text-primary font-medium hover:underline">View Recipe</button>
+</div>
+</div>
+</div>
+<!-- Food Item 8 -->
+<div class="masonry-item bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow cursor-pointer food-card" style="--span: 25;">
+<div class="relative">
+<img src="https://public.readdy.ai/ai/img_res/7400617d59dc7f4c4b9b7bad4211f3f2.jpg" alt="Neapolitan Pizza" class="w-full h-auto object-cover">
+<button class="absolute top-3 right-3 w-8 h-8 rounded-full bg-white/80 backdrop-blur-sm flex items-center justify-center text-gray-700 hover:text-primary transition-colors">
+<i class="ri-heart-line"></i>
+</button>
+<div class="absolute inset-0 bg-black/60 opacity-0 hover:opacity-100 transition-opacity flex items-center justify-center">
+<button class="bg-primary hover:bg-primary/90 text-white px-4 py-2 rounded-button font-medium transition-colors whitespace-nowrap">View Details</button>
+</div>
+</div>
+<div class="p-4">
+<h3 class="font-semibold text-lg text-gray-900">Neapolitan Margherita Pizza</h3>
+<p class="text-gray-600 text-sm mt-1">Wood-fired pizza with San Marzano tomatoes and buffalo mozzarella</p>
+<div class="flex items-center mt-3">
+<div class="w-6 h-6 rounded-full bg-gray-300 flex items-center justify-center">
+<i class="ri-user-line ri-xs text-gray-500"></i>
+</div>
+<span class="text-xs text-gray-700 ml-2">Chef Feranmi</span>
+</div>
+<div class="flex justify-between items-center mt-3">
+<div class="flex items-center">
+<div class="w-4 h-4 flex items-center justify-center text-primary">
+<i class="ri-star-fill"></i>
+</div>
+<span class="text-xs ml-1">4.9</span>
+</div>
+<button class="text-xs text-primary font-medium hover:underline">View Recipe</button>
+</div>
+</div>
+</div>
+<!-- Food Item 9 -->
+<div class="masonry-item bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow cursor-pointer food-card" style="--span: 24;">
+<div class="relative">
+<img src="https://public.readdy.ai/ai/img_res/b08134ad3d0abddc7a205ee0c2568a32.jpg" alt="Charcuterie Board" class="w-full h-auto object-cover"><button class="absolute top-3 right-3 w-8 h-8 rounded-full bg-white/80 backdrop-blur-sm flex items-center justify-center text-gray-700 hover:text-primary transition-colors">
+<i class="ri-heart-line"></i>
+</button>
+<div class="absolute inset-0 bg-black/60 opacity-0 hover:opacity-100 transition-opacity flex items-center justify-center">
+<button class="bg-primary hover:bg-primary/90 text-white px-4 py-2 rounded-button font-medium transition-colors whitespace-nowrap">View Details</button>
+</div>
+</div>
+<div class="p-4">
+<h3 class="font-semibold text-lg text-gray-900">Artisanal Charcuterie Board</h3>
+<p class="text-gray-600 text-sm mt-1">Selection of premium cheeses, cured meats, and seasonal accompaniments</p>
+<div class="flex items-center mt-3">
+<div class="w-6 h-6 rounded-full bg-gray-300 flex items-center justify-center">
+<i class="ri-user-line ri-xs text-gray-500"></i>
+</div>
+<span class="text-xs text-gray-700 ml-2">Chef Isabella</span>
+</div>
+<div class="flex justify-between items-center mt-3">
+<div class="flex items-center">
+<div class="w-4 h-4 flex items-center justify-center text-primary">
+<i class="ri-star-fill"></i>
+</div>
+<span class="text-xs ml-1">4.8</span>
+</div>
+<button class="text-xs text-primary font-medium hover:underline">View Recipe</button>
+</div>
+</div>
+</div>
+<!-- Food Item 10 -->
+<div class="masonry-item bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow cursor-pointer food-card" style="--span: 22;">
+<div class="relative">
+<img src="https://public.readdy.ai/ai/img_res/32a07b587588f8f37def1c698de10495.jpg" alt="Buddha Bowl" class="w-full h-auto object-cover">
+<button class="absolute top-3 right-3 w-8 h-8 rounded-full bg-white/80 backdrop-blur-sm flex items-center justify-center text-gray-700 hover:text-primary transition-colors">
+<i class="ri-heart-fill text-primary"></i>
+</button>
+<div class="absolute inset-0 bg-black/60 opacity-0 hover:opacity-100 transition-opacity flex items-center justify-center">
+<button class="bg-primary hover:bg-primary/90 text-white px-4 py-2 rounded-button font-medium transition-colors whitespace-nowrap">View Details</button>
+</div>
+</div>
+<div class="p-4">
+<h3 class="font-semibold text-lg text-gray-900">Nourishing Buddha Bowl</h3>
+<p class="text-gray-600 text-sm mt-1">Plant-based bowl with quinoa, roasted vegetables, and tahini dressing</p>
+<div class="flex items-center mt-3">
+<div class="w-6 h-6 rounded-full bg-gray-300 flex items-center justify-center">
+<i class="ri-user-line ri-xs text-gray-500"></i>
+</div>
+<span class="text-xs text-gray-700 ml-2">Chef Olivia</span>
+</div>
+<div class="flex justify-between items-center mt-3">
+<div class="flex items-center">
+<div class="w-4 h-4 flex items-center justify-center text-primary">
+<i class="ri-star-fill"></i>
+</div>
+<span class="text-xs ml-1">4.9</span>
+</div>
+<button class="text-xs text-primary font-medium hover:underline">View Recipe</button>
+</div>
+</div>
+</div>
+<!-- Food Item 11 -->
+<div class="masonry-item bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow cursor-pointer food-card" style="--span: 24;">
+<div class="relative">
+<img src="https://public.readdy.ai/ai/img_res/959719c4598b8d3ed778d8583bff5158.jpg" alt="Seafood Paella" class="w-full h-auto object-cover">
+<button class="absolute top-3 right-3 w-8 h-8 rounded-full bg-white/80 backdrop-blur-sm flex items-center justify-center text-gray-700 hover:text-primary transition-colors">
+<i class="ri-heart-line"></i>
+</button>
+<div class="absolute inset-0 bg-black/60 opacity-0 hover:opacity-100 transition-opacity flex items-center justify-center">
+<button class="bg-primary hover:bg-primary/90 text-white px-4 py-2 rounded-button font-medium transition-colors whitespace-nowrap">View Details</button>
+</div>
+</div>
+<div class="p-4">
+<h3 class="font-semibold text-lg text-gray-900">Traditional Seafood Paella</h3>
+<p class="text-gray-600 text-sm mt-1">Saffron-infused rice with fresh seafood and traditional Spanish spices</p>
+<div class="flex items-center mt-3">
+<div class="w-6 h-6 rounded-full bg-gray-300 flex items-center justify-center">
+<i class="ri-user-line ri-xs text-gray-500"></i>
+</div>
+<span class="text-xs text-gray-700 ml-2">Chef Miguel</span>
+</div>
+<div class="flex justify-between items-center mt-3">
+<div class="flex items-center">
+<div class="w-4 h-4 flex items-center justify-center text-primary">
+<i class="ri-star-fill"></i>
+</div>
+<span class="text-xs ml-1">4.7</span>
+</div>
+<button class="text-xs text-primary font-medium hover:underline">View Recipe</button>
+</div>
+</div>
+</div>
+<!-- Food Item 12 -->
+<div class="masonry-item bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow cursor-pointer food-card" style="--span: 23;">
+<div class="relative">
+<img src="https://public.readdy.ai/ai/img_res/7837a08d5d6816f80f61958c8980eb57.jpg" alt="Berry Pancakes" class="w-full h-auto object-cover">
+<button class="absolute top-3 right-3 w-8 h-8 rounded-full bg-white/80 backdrop-blur-sm flex items-center justify-center text-gray-700 hover:text-primary transition-colors">
+<i class="ri-heart-line"></i>
+</button>
+<div class="absolute inset-0 bg-black/60 opacity-0 hover:opacity-100 transition-opacity flex items-center justify-center">
+<button class="bg-primary hover:bg-primary/90 text-white px-4 py-2 rounded-button font-medium transition-colors whitespace-nowrap">View Details</button>
+</div>
+</div>
+<div class="p-4">
+<h3 class="font-semibold text-lg text-gray-900">Fluffy Berry Pancakes</h3>
+<p class="text-gray-600 text-sm mt-1">Light and airy pancakes topped with fresh seasonal berries and maple syrup</p>
+<div class="flex items-center mt-3">
+<div class="w-6 h-6 rounded-full bg-gray-300 flex items-center justify-center">
+<i class="ri-user-line ri-xs text-gray-500"></i>
+</div>
+<span class="text-xs text-gray-700 ml-2">Chef Emma</span>
+</div>
+<div class="flex justify-between items-center mt-3">
+<div class="flex items-center">
+<div class="w-4 h-4 flex items-center justify-center text-primary">
+<i class="ri-star-fill"></i>
+</div>
+<span class="text-xs ml-1">4.8</span>
+</div>
+<button class="text-xs text-primary font-medium hover:underline">View Recipe</button>
+</div>
+</div>
+</div>
+<!-- Food Item 13 -->
+<div class="masonry-item bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow cursor-pointer food-card" style="--span: 25;">
+<div class="relative">
+<img src="https://public.readdy.ai/ai/img_res/316bed23e2a25c046bc7bc08679cc458.jpg" alt="Indian Curry" class="w-full h-auto object-cover">
+<button class="absolute top-3 right-3 w-8 h-8 rounded-full bg-white/80 backdrop-blur-sm flex items-center justify-center text-gray-700 hover:text-primary transition-colors">
+<i class="ri-heart-fill text-primary"></i>
+</button>
+<div class="absolute inset-0 bg-black/60 opacity-0 hover:opacity-100 transition-opacity flex items-center justify-center">
+<button class="bg-primary hover:bg-primary/90 text-white px-4 py-2 rounded-button font-medium transition-colors whitespace-nowrap">View Details</button>
+</div>
+</div>
+<div class="p-4">
+<h3 class="font-semibold text-lg text-gray-900">Aromatic Butter Chicken</h3>
+<p class="text-gray-600 text-sm mt-1">Tender chicken in a rich, creamy tomato sauce with traditional Indian spices</p>
+<div class="flex items-center mt-3">
+<div class="w-6 h-6 rounded-full bg-gray-300 flex items-center justify-center">
+<i class="ri-user-line ri-xs text-gray-500"></i>
+</div>
+<span class="text-xs text-gray-700 ml-2">Chef Priya</span>
+</div>
+<div class="flex justify-between items-center mt-3">
+<div class="flex items-center">
+<div class="w-4 h-4 flex items-center justify-center text-primary">
+<i class="ri-star-fill"></i>
+</div>
+<span class="text-xs ml-1">4.9</span>
+</div>
+<button class="text-xs text-primary font-medium hover:underline">View Recipe</button>
+</div>
+</div>
+</div>
+<!-- Food Item 14 -->
+<div class="masonry-item bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow cursor-pointer food-card" style="--span: 22;">
+<div class="relative">
+<img src="https://public.readdy.ai/ai/img_res/3c9dad23e44d3ee93935046418c99b05.jpg" alt="Coq au Vin" class="w-full h-auto object-cover">
+<button class="absolute top-3 right-3 w-8 h-8 rounded-full bg-white/80 backdrop-blur-sm flex items-center justify-center text-gray-700 hover:text-primary transition-colors">
+<i class="ri-heart-line"></i>
+</button>
+<div class="absolute inset-0 bg-black/60 opacity-0 hover:opacity-100 transition-opacity flex items-center justify-center">
+<button class="bg-primary hover:bg-primary/90 text-white px-4 py-2 rounded-button font-medium transition-colors whitespace-nowrap">View Details</button>
+</div>
+</div>
+<div class="p-4">
+<h3 class="font-semibold text-lg text-gray-900">Classic Coq au Vin</h3>
+<p class="text-gray-600 text-sm mt-1">Traditional French chicken stew braised in red wine with mushrooms and herbs</p>
+<div class="flex items-center mt-3">
+<div class="w-6 h-6 rounded-full bg-gray-300 flex items-center justify-center">
+<i class="ri-user-line ri-xs text-gray-500"></i>
+</div>
+<span class="text-xs text-gray-700 ml-2">Chef Pierre</span>
+</div>
+<div class="flex justify-between items-center mt-3">
+<div class="flex items-center">
+<div class="w-4 h-4 flex items-center justify-center text-primary">
+<i class="ri-star-fill"></i>
+</div>
+<span class="text-xs ml-1">4.8</span>
+</div>
+<button class="text-xs text-primary font-medium hover:underline">View Recipe</button>
+</div>
+</div>
+</div>
+<!-- Food Item 15 -->
+<div class="masonry-item bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow cursor-pointer food-card" style="--span: 24;">
+<div class="relative">
+<img src="https://public.readdy.ai/ai/img_res/f222946e8312a8849aa9e1c9ede8198d.jpg" alt="Tiramisu" class="w-full h-auto object-cover">
+<button class="absolute top-3 right-3 w-8 h-8 rounded-full bg-white/80 backdrop-blur-sm flex items-center justify-center text-gray-700 hover:text-primary transition-colors">
+<i class="ri-heart-line"></i>
+</button>
+<div class="absolute inset-0 bg-black/60 opacity-0 hover:opacity-100 transition-opacity flex items-center justify-center">
+<button class="bg-primary hover:bg-primary/90 text-white px-4 py-2 rounded-button font-medium transition-colors whitespace-nowrap">View Details</button>
+</div>
+</div>
+<div class="p-4">
+<h3 class="font-semibold text-lg text-gray-900">Authentic Italian Tiramisu</h3>
+<p class="text-gray-600 text-sm mt-1">Classic layered dessert with espresso-soaked ladyfingers and mascarpone cream</p>
+<div class="flex items-center mt-3">
+<div class="w-6 h-6 rounded-full bg-gray-300 flex items-center justify-center">
+<i class="ri-user-line ri-xs text-gray-500"></i>
+</div>
+<span class="text-xs text-gray-700 ml-2">Chef Marco</span>
+</div>
+<div class="flex justify-between items-center mt-3">
+<div class="flex items-center">
+<div class="w-4 h-4 flex items-center justify-center text-primary">
+<i class="ri-star-fill"></i>
+</div>
+<span class="text-xs ml-1">4.9</span>
+</div>
+<button class="text-xs text-primary font-medium hover:underline">View Recipe</button>
+</div>
+</div>
+</div>
+<!-- Food Item 16 -->
+<div class="masonry-item bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow cursor-pointer food-card" style="--span: 23;">
+<div class="relative">
+<img src="https://public.readdy.ai/ai/img_res/eb8d488a8362ecaf11212811d89986e6.jpg" alt="Poke Bowl" class="w-full h-auto object-cover">
+<button class="absolute top-3 right-3 w-8 h-8 rounded-full bg-white/80 backdrop-blur-sm flex items-center justify-center text-gray-700 hover:text-primary transition-colors">
+<i class="ri-heart-fill text-primary"></i>
+</button>
+<div class="absolute inset-0 bg-black/60 opacity-0 hover:opacity-100 transition-opacity flex items-center justify-center">
+<button class="bg-primary hover:bg-primary/90 text-white px-4 py-2 rounded-button font-medium transition-colors whitespace-nowrap">View Details</button>
+</div>
+</div>
+<div class="p-4">
+<h3 class="font-semibold text-lg text-gray-900">Fresh Tuna Poke Bowl</h3>
+<p class="text-gray-600 text-sm mt-1">Hawaiian-inspired bowl with marinated raw tuna, rice, and fresh vegetables</p>
+<div class="flex items-center mt-3">
+<div class="w-6 h-6 rounded-full bg-gray-300 flex items-center justify-center">
+<i class="ri-user-line ri-xs text-gray-500"></i>
+</div>
+<span class="text-xs text-gray-700 ml-2">Chef Kai</span>
+</div>
+<div class="flex justify-between items-center mt-3">
+<div class="flex items-center">
+<div class="w-4 h-4 flex items-center justify-center text-primary">
+<i class="ri-star-fill"></i>
+</div>
+<span class="text-xs ml-1">4.8</span>
+</div>
+<button class="text-xs text-primary font-medium hover:underline">View Recipe</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Load More Button -->
+<div class="flex justify-center mt-10">
+<button id="loadMoreBtn" class="bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 px-6 py-3 rounded-button font-medium transition-colors whitespace-nowrap">Load More</button>
+</div>
+<!-- Gallery Slider Section -->
+<section class="py-16 bg-white">
+<div class="container mx-auto px-4">
+<div class="text-center mb-10">
+<h2 class="text-3xl font-bold text-gray-900 mb-3">Featured Culinary Masterpieces</h2>
+<p class="text-gray-700 max-w-2xl mx-auto">Explore our handpicked selection of visually stunning dishes created by world-renowned chefs</p>
+</div>
+<div class="relative max-w-5xl mx-auto">
+<!-- Gallery Slider Container -->
+<div id="gallery-slider" class="overflow-hidden">
+<div id="gallery-track" class="flex transition-transform duration-300 ease-in-out">
+<!-- Gallery Item 1 -->
+<div class="gallery-item min-w-full px-4">
+<div class="bg-white rounded-lg overflow-hidden shadow-md">
+<div class="relative aspect-video">
+<img src="https://public.readdy.ai/ai/img_res/ee0b17a82128073b03ddeda27a4a640e.jpg" alt="Seafood Paella" class="w-full h-full object-cover">
+<div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-6">
+<h3 class="text-white text-xl font-semibold">Traditional Spanish Seafood Paella</h3>
+<p class="text-white/80 mt-2">Chef Miguel Sanchez • Barcelona, Spain</p>
+</div>
+</div>
+<div class="p-6">
+<p class="text-gray-700 mb-4">This authentic seafood paella features saffron-infused Bomba rice cooked in a rich seafood broth, topped with the freshest catches from the Mediterranean Sea. The dish is finished with a squeeze of lemon and a sprinkle of fresh parsley.</p>
+<div class="flex justify-between items-center">
+<div class="flex items-center space-x-1">
+<div class="w-4 h-4 flex items-center justify-center text-primary">
+<i class="ri-star-fill"></i>
+</div>
+<div class="w-4 h-4 flex items-center justify-center text-primary">
+<i class="ri-star-fill"></i>
+</div>
+<div class="w-4 h-4 flex items-center justify-center text-primary">
+<i class="ri-star-fill"></i>
+</div>
+<div class="w-4 h-4 flex items-center justify-center text-primary">
+<i class="ri-star-fill"></i>
+</div>
+<div class="w-4 h-4 flex items-center justify-center text-primary">
+<i class="ri-star-half-fill"></i>
+</div>
+<span class="text-sm ml-1 text-gray-700">4.8 (236 reviews)</span>
+</div>
+<button class="bg-primary hover:bg-primary/90 text-white px-4 py-2 rounded-button text-sm font-medium transition-colors whitespace-nowrap">View Recipe</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Gallery Item 2 -->
+<div class="gallery-item min-w-full px-4">
+<div class="bg-white rounded-lg overflow-hidden shadow-md">
+<div class="relative aspect-video">
+<img src="https://public.readdy.ai/ai/img_res/7f673a10b482c12642143ad4905ca667.jpg" alt="Beef Wellington" class="w-full h-full object-cover">
+<div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-6">
+<h3 class="text-white text-xl font-semibold">Classic Beef Wellington</h3>
+<p class="text-white/80 mt-2">Chef James Harrison • London, UK</p>
+</div>
+</div>
+<div class="p-6">
+<p class="text-gray-700 mb-4">This timeless British masterpiece features prime beef tenderloin coated with mushroom duxelles, wrapped in prosciutto and golden puff pastry. Served with a rich red wine reduction and seasonal vegetables.</p>
+<div class="flex justify-between items-center">
+<div class="flex items-center space-x-1">
+<div class="w-4 h-4 flex items-center justify-center text-primary">
+<i class="ri-star-fill"></i>
+</div>
+<div class="w-4 h-4 flex items-center justify-center text-primary">
+<i class="ri-star-fill"></i>
+</div>
+<div class="w-4 h-4 flex items-center justify-center text-primary">
+<i class="ri-star-fill"></i>
+</div>
+<div class="w-4 h-4 flex items-center justify-center text-primary">
+<i class="ri-star-fill"></i>
+</div>
+<div class="w-4 h-4 flex items-center justify-center text-primary">
+<i class="ri-star-fill"></i>
+</div>
+<span class="text-sm ml-1 text-gray-700">5.0 (189 reviews)</span>
+</div>
+<button class="bg-primary hover:bg-primary/90 text-white px-4 py-2 rounded-button text-sm font-medium transition-colors whitespace-nowrap">View Recipe</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Gallery Item 3 -->
+<div class="gallery-item min-w-full px-4">
+<div class="bg-white rounded-lg overflow-hidden shadow-md">
+<div class="relative aspect-video">
+<img src="https://public.readdy.ai/ai/img_res/0b65b12502277712c08e9a4eae3fc635.jpg" alt="Omakase Sushi" class="w-full h-full object-cover">
+<div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-6">
+<h3 class="text-white text-xl font-semibold">Premium Omakase Sushi Selection</h3>
+<p class="text-white/80 mt-2">Chef Hiroshi Tanaka • Tokyo, Japan</p>
+</div>
+</div>
+<div class="p-6">
+<p class="text-gray-700 mb-4">This exquisite chef-selected sushi experience features the finest seasonal seafood, hand-pressed by a master sushi chef. Each piece is crafted to showcase the natural flavors of premium ingredients sourced from Tsukiji Fish Market.</p>
+<div class="flex justify-between items-center">
+<div class="flex items-center space-x-1">
+<div class="w-4 h-4 flex items-center justify-center text-primary">
+<i class="ri-star-fill"></i>
+</div>
+<div class="w-4 h-4 flex items-center justify-center text-primary">
+<i class="ri-star-fill"></i>
+</div>
+<div class="w-4 h-4 flex items-center justify-center text-primary">
+<i class="ri-star-fill"></i>
+</div>
+<div class="w-4 h-4 flex items-center justify-center text-primary">
+<i class="ri-star-fill"></i>
+</div>
+<div class="w-4 h-4 flex items-center justify-center text-primary">
+<i class="ri-star-fill"></i>
+</div>
+<span class="text-sm ml-1 text-gray-700">4.9 (312 reviews)</span>
+</div>
+<button class="bg-primary hover:bg-primary/90 text-white px-4 py-2 rounded-button text-sm font-medium transition-colors whitespace-nowrap">View Recipe</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Gallery Item 4 -->
+<div class="gallery-item min-w-full px-4">
+<div class="bg-white rounded-lg overflow-hidden shadow-md">
+<div class="relative aspect-video">
+<img src="https://public.readdy.ai/ai/img_res/b92152f72775bfb6b4fbefe27ec766dd.jpg" alt="French Dessert Trio" class="w-full h-full object-cover">
+<div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-6">
+<h3 class="text-white text-xl font-semibold">French Patisserie Dessert Trio</h3>
+<p class="text-white/80 mt-2">Chef Sophie Laurent • Paris, France</p>
+</div>
+</div>
+<div class="p-6">
+<p class="text-gray-700 mb-4">This exquisite dessert collection showcases the pinnacle of French pastry artistry: a perfectly risen chocolate soufflé, classic vanilla bean crème brûlée with caramelized sugar crust, and a seasonal fruit tart with almond cream.</p>
+<div class="flex justify-between items-center">
+<div class="flex items-center space-x-1">
+<div class="w-4 h-4 flex items-center justify-center text-primary">
+<i class="ri-star-fill"></i>
+</div>
+<div class="w-4 h-4 flex items-center justify-center text-primary">
+<i class="ri-star-fill"></i>
+</div>
+<div class="w-4 h-4 flex items-center justify-center text-primary">
+<i class="ri-star-fill"></i>
+</div>
+<div class="w-4 h-4 flex items-center justify-center text-primary">
+<i class="ri-star-fill"></i>
+</div>
+<div class="w-4 h-4 flex items-center justify-center text-primary">
+<i class="ri-star-half-fill"></i>
+</div>
+<span class="text-sm ml-1 text-gray-700">4.7 (278 reviews)</span>
+</div>
+<button class="bg-primary hover:bg-primary/90 text-white px-4 py-2 rounded-button text-sm font-medium transition-colors whitespace-nowrap">View Recipe</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Gallery Navigation Buttons -->
+<button id="gallery-prev" class="absolute top-1/2 left-0 transform -translate-y-1/2 -translate-x-1/2 w-12 h-12 rounded-full bg-white/80 backdrop-blur-sm shadow-md flex items-center justify-center text-gray-700 hover:text-primary transition-colors z-10">
+<i class="ri-arrow-left-s-line ri-lg"></i>
+</button>
+<button id="gallery-next" class="absolute top-1/2 right-0 transform -translate-y-1/2 translate-x-1/2 w-12 h-12 rounded-full bg-white/80 backdrop-blur-sm shadow-md flex items-center justify-center text-gray-700 hover:text-primary transition-colors z-10">
+<i class="ri-arrow-right-s-line ri-lg"></i>
+</button>
+<!-- Gallery Pagination Dots -->
+<div class="flex justify-center mt-6 space-x-2">
+<button class="gallery-dot w-3 h-3 rounded-full bg-primary opacity-100" data-index="0"></button>
+<button class="gallery-dot w-3 h-3 rounded-full bg-gray-300 opacity-50" data-index="1"></button>
+<button class="gallery-dot w-3 h-3 rounded-full bg-gray-300 opacity-50" data-index="2"></button>
+<button class="gallery-dot w-3 h-3 rounded-full bg-gray-300 opacity-50" data-index="3"></button>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Food Detail Modal -->
+<div id="foodDetailModal" class="modal">
+<div class="modal-content max-w-4xl">
+<div class="flex flex-col md:flex-row">
+<!-- Left: Image -->
+<div class="md:w-1/2">
+<img src="https://public.readdy.ai/ai/img_res/afe3e8d78e1334c25d0cecd9db6d5876.jpg" alt="Neapolitan Margherita Pizza" class="w-full h-full object-cover">
+</div>
+<!-- Right: Content -->
+<div class="md:w-1/2 p-4 sm:p-6 bg-white overflow-y-auto" style="max-height: 80vh; max-height: -webkit-fill-available;">
+<div class="flex justify-between items-start mb-4">
+<h2 class="text-2xl font-bold text-gray-900">Neapolitan Margherita Pizza</h2>
+<button id="closeModal" class="w-8 h-8 flex items-center justify-center text-gray-500 hover:text-gray-700">
+<i class="ri-close-line ri-lg"></i>
+</button>
+</div>
+<div class="flex items-center mb-4">
+<div class="w-10 h-10 rounded-full bg-gray-300 flex items-center justify-center">
+<i class="ri-user-line text-gray-500"></i>
+</div>
+<div class="ml-3">
+<p class="font-medium text-gray-900">Chef Feranmi</p>
+<p class="text-xs text-gray-600">Trattoria Napoletana, Rome</p>
+</div>
+</div>
+<div class="flex items-center space-x-4 mb-6">
+<div class="flex items-center">
+<div class="w-4 h-4 flex items-center justify-center text-primary">
+<i class="ri-star-fill"></i>
+</div>
+<span class="text-sm ml-1 font-medium">4.9</span>
+<span class="text-xs text-gray-500 ml-1">(328 reviews)</span>
+</div>
+<div class="flex items-center">
+<div class="w-4 h-4 flex items-center justify-center text-gray-700">
+<i class="ri-time-line"></i>
+</div>
+<span class="text-sm ml-1">30 min</span>
+</div>
+<div class="flex items-center">
+<div class="w-4 h-4 flex items-center justify-center text-gray-700">
+<i class="ri-fire-line"></i>
+</div>
+<span class="text-sm ml-1">320 cal</span>
+</div>
+</div>
+<div class="mb-6">
+<h3 class="font-medium text-gray-900 mb-2">Description</h3>
+<p class="text-gray-700 text-sm">The Neapolitan Margherita pizza is the quintessential Italian classic, featuring a thin, soft, and chewy crust with a slightly charred exterior from the intense heat of a wood-fired oven. Topped with sweet San Marzano tomatoes, creamy buffalo mozzarella, fresh basil, and a drizzle of extra virgin olive oil, this pizza represents the colors of the Italian flag and the pure flavors of Naples.</p>
+</div>
+<div class="mb-6">
+<h3 class="font-medium text-gray-900 mb-2">Ingredients</h3>
+<ul class="text-sm text-gray-700 space-y-1">
+<li class="flex items-start">
+<div class="w-4 h-4 flex items-center justify-center text-primary mt-0.5">
+<i class="ri-checkbox-circle-fill"></i>
+</div>
+<span class="ml-2">250g Tipo 00 flour</span>
+</li>
+<li class="flex items-start">
+<div class="w-4 h-4 flex items-center justify-center text-primary mt-0.5">
+<i class="ri-checkbox-circle-fill"></i>
+</div>
+<span class="ml-2">150ml lukewarm water</span>
+</li>
+<li class="flex items-start">
+<div class="w-4 h-4 flex items-center justify-center text-primary mt-0.5">
+<i class="ri-checkbox-circle-fill"></i>
+</div>
+<span class="ml-2">5g fresh yeast or 3g dry yeast</span>
+</li>
+<li class="flex items-start">
+<div class="w-4 h-4 flex items-center justify-center text-primary mt-0.5">
+<i class="ri-checkbox-circle-fill"></i>
+</div>
+<span class="ml-2">5g sea salt</span>
+</li>
+<li class="flex items-start">
+<div class="w-4 h-4 flex items-center justify-center text-primary mt-0.5">
+<i class="ri-checkbox-circle-fill"></i>
+</div>
+<span class="ml-2">150g San Marzano tomatoes, crushed</span>
+</li>
+<li class="flex items-start">
+<div class="w-4 h-4 flex items-center justify-center text-primary mt-0.5">
+<i class="ri-checkbox-circle-fill"></i>
+</div>
+<span class="ml-2">125g buffalo mozzarella, torn into pieces</span>
+</li>
+<li class="flex items-start">
+<div class="w-4 h-4 flex items-center justify-center text-primary mt-0.5">
+<i class="ri-checkbox-circle-fill"></i>
+</div>
+<span class="ml-2">Fresh basil leaves</span>
+</li>
+<li class="flex items-start">
+<div class="w-4 h-4 flex items-center justify-center text-primary mt-0.5">
+<i class="ri-checkbox-circle-fill"></i>
+</div>
+<span class="ml-2">Extra virgin olive oil</span>
+</li>
+</ul>
+</div>
+<div class="flex space-x-3 mb-6">
+<button class="flex-1 bg-primary hover:bg-primary/90 text-white py-3 rounded-button font-medium transition-colors whitespace-nowrap">Save Recipe</button>
+<button class="w-12 h-12 flex items-center justify-center border border-gray-300 rounded-button text-gray-700 hover:bg-gray-50 transition-colors">
+<i class="ri-share-line"></i>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Recipe Detail Modal -->
+<div id="recipeDetailModal" class="modal">
+<div class="modal-content max-w-5xl">
+<div class="flex flex-col">
+<!-- Header with image -->
+<div class="relative h-64 md:h-80">
+<img src="https://public.readdy.ai/ai/img_res/555ac7559fa3e3d818b02eed676efbd0.jpg" alt="Neapolitan Margherita Pizza" class="w-full h-full object-cover">
+<div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end">
+<div class="p-6 w-full">
+<div class="flex justify-between items-start">
+<div>
+<h2 class="text-3xl font-bold text-white mb-2">Neapolitan Margherita Pizza</h2>
+<div class="flex items-center space-x-4">
+<div class="flex items-center">
+<div class="w-4 h-4 flex items-center justify-center text-primary">
+<i class="ri-star-fill"></i>
+</div>
+<span class="text-sm ml-1 font-medium text-white">4.9</span>
+<span class="text-xs text-white/80 ml-1">(328 reviews)</span>
+</div>
+<div class="flex items-center">
+<div class="w-4 h-4 flex items-center justify-center text-white">
+<i class="ri-user-line"></i>
+</div>
+<span class="text-sm ml-1 text-white">Chef Feranmi</span>
+</div>
+</div>
+</div>
+<button id="closeRecipeModal" class="w-8 h-8 flex items-center justify-center text-white hover:text-gray-300">
+<i class="ri-close-line ri-lg"></i>
+</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Content -->
+<div class="bg-white p-6">
+<!-- Recipe Info Cards -->
+<div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+<div class="bg-gray-50 p-4 rounded-lg">
+<div class="flex items-center mb-1">
+<div class="w-5 h-5 flex items-center justify-center text-primary">
+<i class="ri-time-line"></i>
+</div>
+<span class="text-xs font-medium text-gray-500 ml-1">PREP TIME</span>
+</div>
+<p class="text-gray-900 font-medium">20 minutes</p>
+</div>
+<div class="bg-gray-50 p-4 rounded-lg">
+<div class="flex items-center mb-1">
+<div class="w-5 h-5 flex items-center justify-center text-primary">
+<i class="ri-fire-line"></i>
+</div>
+<span class="text-xs font-medium text-gray-500 ml-1">COOK TIME</span>
+</div>
+<p class="text-gray-900 font-medium">10 minutes</p>
+</div>
+<div class="bg-gray-50 p-4 rounded-lg">
+<div class="flex items-center mb-1">
+<div class="w-5 h-5 flex items-center justify-center text-primary">
+<i class="ri-restaurant-line"></i>
+</div>
+<span class="text-xs font-medium text-gray-500 ml-1">SERVINGS</span>
+</div>
+<p class="text-gray-900 font-medium">2 servings</p>
+</div>
+<div class="bg-gray-50 p-4 rounded-lg">
+<div class="flex items-center mb-1">
+<div class="w-5 h-5 flex items-center justify-center text-primary">
+<i class="ri-bar-chart-line"></i>
+</div>
+<span class="text-xs font-medium text-gray-500 ml-1">DIFFICULTY</span>
+</div>
+<p class="text-gray-900 font-medium">Intermediate</p>
+</div>
+</div>
+<!-- Tabs -->
+<div class="border-b border-gray-200 mb-6">
+<div class="flex space-x-2">
+<button class="recipe-tab px-4 py-2 text-sm font-medium bg-primary text-white rounded-t-lg" data-tab="recipeTab">Recipe</button>
+<button class="recipe-tab px-4 py-2 text-sm font-medium text-gray-700 hover:text-gray-900 rounded-t-lg" data-tab="nutritionTab">Nutrition</button>
+<button class="recipe-tab px-4 py-2 text-sm font-medium text-gray-700 hover:text-gray-900 rounded-t-lg" data-tab="notesTab">Notes & Tips</button>
+</div>
+</div>
+<!-- Tab Contents -->
+<div class="recipe-tab-content" id="recipeTab">
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
+<!-- Left Column: Ingredients -->
+<div class="md:col-span-1">
+<h3 class="font-semibold text-gray-900 mb-4">Ingredients</h3>
+<div class="bg-gray-50 p-4 rounded-lg mb-6">
+<h4 class="font-medium text-gray-900 mb-2">For the Dough</h4>
+<ul class="text-sm text-gray-700 space-y-2">
+<li class="flex items-start">
+<div class="w-4 h-4 flex items-center justify-center text-primary mt-0.5">
+<i class="ri-checkbox-circle-fill"></i>
+</div>
+<span class="ml-2">250g Tipo 00 flour</span>
+</li>
+<li class="flex items-start">
+<div class="w-4 h-4 flex items-center justify-center text-primary mt-0.5">
+<i class="ri-checkbox-circle-fill"></i>
+</div>
+<span class="ml-2">150ml lukewarm water</span>
+</li>
+<li class="flex items-start">
+<div class="w-4 h-4 flex items-center justify-center text-primary mt-0.5">
+<i class="ri-checkbox-circle-fill"></i>
+</div>
+<span class="ml-2">5g fresh yeast or 3g dry yeast</span>
+</li>
+<li class="flex items-start">
+<div class="w-4 h-4 flex items-center justify-center text-primary mt-0.5">
+<i class="ri-checkbox-circle-fill"></i>
+</div>
+<span class="ml-2">5g sea salt</span>
+</li>
+<li class="flex items-start">
+<div class="w-4 h-4 flex items-center justify-center text-primary mt-0.5">
+<i class="ri-checkbox-circle-fill"></i>
+</div>
+<span class="ml-2">1 tbsp extra virgin olive oil</span>
+</li>
+</ul>
+</div>
+<div class="bg-gray-50 p-4 rounded-lg">
+<h4 class="font-medium text-gray-900 mb-2">For the Topping</h4>
+<ul class="text-sm text-gray-700 space-y-2">
+<li class="flex items-start">
+<div class="w-4 h-4 flex items-center justify-center text-primary mt-0.5">
+<i class="ri-checkbox-circle-fill"></i>
+</div>
+<span class="ml-2">150g San Marzano tomatoes, crushed</span>
+</li>
+<li class="flex items-start">
+<div class="w-4 h-4 flex items-center justify-center text-primary mt-0.5">
+<i class="ri-checkbox-circle-fill"></i>
+</div>
+<span class="ml-2">125g buffalo mozzarella, torn into pieces</span>
+</li>
+<li class="flex items-start">
+<div class="w-4 h-4 flex items-center justify-center text-primary mt-0.5">
+<i class="ri-checkbox-circle-fill"></i>
+</div>
+<span class="ml-2">Fresh basil leaves (8-10 leaves)</span>
+</li>
+<li class="flex items-start">
+<div class="w-4 h-4 flex items-center justify-center text-primary mt-0.5">
+<i class="ri-checkbox-circle-fill"></i>
+</div>
+<span class="ml-2">2 tbsp extra virgin olive oil</span>
+</li>
+<li class="flex items-start">
+<div class="w-4 h-4 flex items-center justify-center text-primary mt-0.5">
+<i class="ri-checkbox-circle-fill"></i>
+</div>
+<span class="ml-2">Sea salt, to taste</span>
+</li>
+</ul>
+</div>
+</div>
+<!-- Right Column: Instructions -->
+<div class="md:col-span-2">
+<h3 class="font-semibold text-gray-900 mb-4">Instructions</h3>
+<div class="space-y-6">
+<div class="flex">
+<div class="flex-shrink-0 w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center font-medium">1</div>
+<div class="ml-4">
+<h4 class="font-medium text-gray-900 mb-1">Prepare the Dough</h4>
+<p class="text-gray-700 text-sm">In a large bowl, combine the flour and salt. In a separate small bowl, dissolve the yeast in lukewarm water and let it sit for 5 minutes until foamy. Make a well in the center of the flour and pour in the yeast mixture and olive oil. Mix until a dough forms.</p>
+</div>
+</div>
+<div class="flex">
+<div class="flex-shrink-0 w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center font-medium">2</div>
+<div class="ml-4">
+<h4 class="font-medium text-gray-900 mb-1">Knead the Dough</h4>
+<p class="text-gray-700 text-sm">Transfer the dough to a floured surface and knead for about 10 minutes until smooth and elastic. Form into a ball and place in a lightly oiled bowl. Cover with a damp cloth and let rise in a warm place for at least 2 hours, or until doubled in size.</p>
+</div>
+</div>
+<div class="flex">
+<div class="flex-shrink-0 w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center font-medium">3</div>
+<div class="ml-4">
+<h4 class="font-medium text-gray-900 mb-1">Preheat Your Oven</h4>
+<p class="text-gray-700 text-sm">Preheat your oven to the highest temperature (ideally 500°F/260°C or higher) with a pizza stone or heavy baking sheet inside for at least 30 minutes.</p>
+</div>
+</div>
+<div class="flex">
+<div class="flex-shrink-0 w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center font-medium">4</div>
+<div class="ml-4">
+<h4 class="font-medium text-gray-900 mb-1">Shape the Pizza</h4>
+<p class="text-gray-700 text-sm">Once the dough has risen, punch it down and divide it into two equal portions (for two 10-inch pizzas). On a floured surface, use your hands to gently stretch one portion of dough into a 10-inch circle, creating a slightly thicker rim around the edge.</p>
+</div>
+</div>
+<div class="flex">
+<div class="flex-shrink-0 w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center font-medium">5</div>
+<div class="ml-4">
+<h4 class="font-medium text-gray-900 mb-1">Add Toppings</h4>
+<p class="text-gray-700 text-sm">Transfer the shaped dough to a piece of parchment paper or a floured pizza peel. Spread half of the crushed tomatoes over the dough, leaving a small border around the edge. Sprinkle with a pinch of salt. Arrange half of the mozzarella pieces evenly over the tomatoes.</p>
+</div>
+</div>
+<div class="flex">
+<div class="flex-shrink-0 w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center font-medium">6</div>
+<div class="ml-4">
+<h4 class="font-medium text-gray-900 mb-1">Bake the Pizza</h4>
+<p class="text-gray-700 text-sm">Carefully slide the pizza (with the parchment paper if using) onto the preheated stone or baking sheet. Bake for 8-10 minutes, or until the crust is puffed and charred in spots and the cheese is melted and bubbly.</p>
+</div>
+</div>
+<div class="flex">
+<div class="flex-shrink-0 w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center font-medium">7</div>
+<div class="ml-4">
+<h4 class="font-medium text-gray-900 mb-1">Finish and Serve</h4>
+<p class="text-gray-700 text-sm">Remove the pizza from the oven and immediately drizzle with olive oil. Scatter fresh basil leaves on top. Slice and serve immediately while hot. Repeat with the remaining dough and toppings for the second pizza.</p>
+</div>
+</div>
+</div>
+<!-- Video Tutorial -->
+<div class="mt-8">
+<h3 class="font-semibold text-gray-900 mb-4">Video Tutorial</h3>
+<div class="aspect-video bg-gray-100 rounded-lg flex items-center justify-center">
+<div class="text-center">
+<div class="w-16 h-16 mx-auto flex items-center justify-center rounded-full bg-primary/90 text-white mb-2">
+<i class="ri-play-fill ri-lg"></i>
+</div>
+<p class="text-sm text-gray-700">Watch the full tutorial</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="recipe-tab-content hidden" id="nutritionTab">
+<div class="max-w-2xl mx-auto">
+<h3 class="font-semibold text-gray-900 mb-4">Nutritional Information</h3>
+<p class="text-sm text-gray-700 mb-6">Values are per serving (1/2 pizza)</p>
+<div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+<div class="bg-gray-50 p-4 rounded-lg text-center">
+<p class="text-xs font-medium text-gray-500 mb-1">CALORIES</p>
+<p class="text-xl font-semibold text-gray-900">320</p>
+<p class="text-xs text-gray-500">kcal</p>
+</div>
+<div class="bg-gray-50 p-4 rounded-lg text-center">
+<p class="text-xs font-medium text-gray-500 mb-1">PROTEIN</p>
+<p class="text-xl font-semibold text-gray-900">12g</p>
+<p class="text-xs text-gray-500">15% DV</p>
+</div>
+<div class="bg-gray-50 p-4 rounded-lg text-center">
+<p class="text-xs font-medium text-gray-500 mb-1">CARBS</p>
+<p class="text-xl font-semibold text-gray-900">42g</p>
+<p class="text-xs text-gray-500">14% DV</p>
+</div>
+<div class="bg-gray-50 p-4 rounded-lg text-center">
+<p class="text-xs font-medium text-gray-500 mb-1">FAT</p>
+<p class="text-xl font-semibold text-gray-900">11g</p>
+<p class="text-xs text-gray-500">17% DV</p>
+</div>
+</div>
+<div class="bg-gray-50 p-6 rounded-lg">
+<h4 class="font-medium text-gray-900 mb-4">Detailed Nutrition Facts</h4>
+<div class="space-y-3">
+<div class="flex justify-between items-center pb-2 border-b border-gray-200">
+<span class="text-sm text-gray-700">Saturated Fat</span>
+<span class="text-sm font-medium text-gray-900">4.5g</span>
+</div>
+<div class="flex justify-between items-center pb-2 border-b border-gray-200">
+<span class="text-sm text-gray-700">Trans Fat</span>
+<span class="text-sm font-medium text-gray-900">0g</span>
+</div>
+<div class="flex justify-between items-center pb-2 border-b border-gray-200">
+<span class="text-sm text-gray-700">Cholesterol</span>
+<span class="text-sm font-medium text-gray-900">22mg</span>
+</div>
+<div class="flex justify-between items-center pb-2 border-b border-gray-200">
+<span class="text-sm text-gray-700">Sodium</span>
+<span class="text-sm font-medium text-gray-900">580mg</span>
+</div>
+<div class="flex justify-between items-center pb-2 border-b border-gray-200">
+<span class="text-sm text-gray-700">Dietary Fiber</span>
+<span class="text-sm font-medium text-gray-900">2.5g</span>
+</div>
+<div class="flex justify-between items-center pb-2 border-b border-gray-200">
+<span class="text-sm text-gray-700">Sugars</span>
+<span class="text-sm font-medium text-gray-900">3g</span>
+</div>
+<div class="flex justify-between items-center pb-2 border-b border-gray-200">
+<span class="text-sm text-gray-700">Vitamin D</span>
+<span class="text-sm font-medium text-gray-900">0.2mcg (1% DV)</span>
+</div>
+<div class="flex justify-between items-center pb-2 border-b border-gray-200">
+<span class="text-sm text-gray-700">Calcium</span>
+<span class="text-sm font-medium text-gray-900">220mg (17% DV)</span>
+</div>
+<div class="flex justify-between items-center pb-2 border-b border-gray-200">
+<span class="text-sm text-gray-700">Iron</span>
+<span class="text-sm font-medium text-gray-900">2.2mg (12% DV)</span>
+</div>
+<div class="flex justify-between items-center">
+<span class="text-sm text-gray-700">Potassium</span>
+<span class="text-sm font-medium text-gray-900">210mg (4% DV)</span>
+</div>
+</div>
+<p class="text-xs text-gray-500 mt-4">*Percent Daily Values are based on a 2,000 calorie diet. Your daily values may be higher or lower depending on your calorie needs.</p>
+</div>
+</div>
+</div>
+<div class="recipe-tab-content hidden" id="notesTab">
+<div class="max-w-2xl mx-auto">
+<h3 class="font-semibold text-gray-900 mb-4">Chef's Notes & Tips</h3>
+<div class="space-y-6">
+<div class="bg-gray-50 p-6 rounded-lg">
+<h4 class="font-medium text-gray-900 mb-2">Dough Preparation</h4>
+<p class="text-sm text-gray-700">For the best results, prepare the dough a day in advance and let it slow-rise in the refrigerator overnight. This develops more complex flavors and improves the texture. Just remove it from the refrigerator about 2 hours before you plan to use it to allow it to come to room temperature.</p>
+</div>
+<div class="bg-gray-50 p-6 rounded-lg">
+<h4 class="font-medium text-gray-900 mb-2">Ingredient Selection</h4>
+<p class="text-sm text-gray-700">The quality of ingredients makes a huge difference in this simple pizza. Use the best quality San Marzano tomatoes you can find, and fresh buffalo mozzarella (or fior di latte) rather than pre-shredded cheese. For the most authentic flavor, use Italian Tipo 00 flour, which has a finer grind than all-purpose flour.</p>
+</div>
+<div class="bg-gray-50 p-6 rounded-lg">
+<h4 class="font-medium text-gray-900 mb-2">Cooking Method</h4>
+<p class="text-sm text-gray-700">Traditional Neapolitan pizza is cooked in a wood-fired oven at temperatures around 900°F (480°C) for just 60-90 seconds. To approximate this at home, use the highest temperature your oven can reach and a pizza stone or steel that's been preheated for at least 45 minutes. Some home cooks have success using their oven's broiler setting for the last minute of cooking to char the crust.</p>
+</div>
+<div class="bg-gray-50 p-6 rounded-lg">
+<h4 class="font-medium text-gray-900 mb-2">Serving Suggestions</h4>
+<p class="text-sm text-gray-700">Neapolitan pizza is traditionally eaten with a knife and fork, not folded or picked up by the slice. Serve immediately after cooking for the best texture and flavor. Pair with a simple arugula salad dressed with lemon and olive oil, and a glass of light Italian red wine like Chianti or Montepulciano d'Abruzzo.</p>
+</div>
+<div class="bg-gray-50 p-6 rounded-lg">
+<h4 class="font-medium text-gray-900 mb-2">Common Mistakes to Avoid</h4>
+<ul class="text-sm text-gray-700 space-y-2">
+<li class="flex items-start">
+<div class="w-4 h-4 flex items-center justify-center text-primary mt-0.5">
+<i class="ri-close-circle-line"></i>
+</div>
+<span class="ml-2">Overworking the dough, which makes it tough</span>
+</li>
+<li class="flex items-start">
+<div class="w-4 h-4 flex items-center justify-center text-primary mt-0.5">
+<i class="ri-close-circle-line"></i>
+</div>
+<span class="ml-2">Using too many toppings, which weighs down the crust</span>
+</li>
+<li class="flex items-start">
+<div class="w-4 h-4 flex items-center justify-center text-primary mt-0.5">
+<i class="ri-close-circle-line"></i>
+</div>
+<span class="ml-2">Adding fresh basil before baking (it will burn)</span>
+</li>
+<li class="flex items-start">
+<div class="w-4 h-4 flex items-center justify-center text-primary mt-0.5">
+<i class="ri-close-circle-line"></i>
+</div>
+<span class="ml-2">Not preheating your oven and stone long enough</span>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<!-- Action Buttons -->
+<div class="flex flex-wrap gap-3 mt-8">
+<button id="printRecipeBtn" class="hidden sm:flex items-center px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-800 rounded-button text-sm font-medium transition-colors whitespace-nowrap">
+<i class="ri-printer-line mr-2"></i>
+Print Recipe
+</button>
+<button class="flex items-center px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-800 rounded-button text-sm font-medium transition-colors whitespace-nowrap">
+<i class="ri-heart-line mr-2"></i>
+<span class="hidden sm:inline">Save to Favorites</span>
+<span class="sm:hidden">Save</span>
+</button>
+<button id="shareRecipeBtn" class="flex items-center px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-800 rounded-button text-sm font-medium transition-colors whitespace-nowrap">
+<i class="ri-share-line mr-2"></i>
+<span class="hidden sm:inline">Share Recipe</span>
+<span class="sm:hidden">Share</span>
+</button>
+<button class="flex-1 bg-primary hover:bg-primary/90 text-white py-2 rounded-button text-sm font-medium transition-colors whitespace-nowrap">
+<span class="hidden sm:inline">Add Ingredients to Shopping List</span>
+<span class="sm:hidden">Add to List</span>
+</button>
+</div>
+<!-- Share Modal (Hidden by default) -->
+<div id="shareModal" class="hidden fixed inset-0 bg-black/50 z-50 flex items-center justify-center">
+<div class="bg-white rounded-lg p-6 max-w-md w-full mx-4">
+<div class="flex justify-between items-center mb-4">
+<h3 class="font-semibold text-gray-900">Share This Recipe</h3>
+<button id="closeShareModal" class="w-8 h-8 flex items-center justify-center text-gray-500 hover:text-gray-700">
+<i class="ri-close-line"></i>
+</button>
+</div>
+<div class="mb-4">
+<p class="text-sm text-gray-700 mb-2">Share via social media:</p>
+<div class="flex space-x-3">
+<a href="#" class="w-10 h-10 flex items-center justify-center rounded-full bg-[#1877F2] text-white">
+<i class="ri-facebook-fill"></i>
+</a>
+<a href="#" class="w-10 h-10 flex items-center justify-center rounded-full bg-[#1DA1F2] text-white">
+<i class="ri-twitter-fill"></i>
+</a>
+<a href="#" class="w-10 h-10 flex items-center justify-center rounded-full bg-[#E60023] text-white">
+<i class="ri-pinterest-fill"></i>
+</a>
+<a href="#" class="w-10 h-10 flex items-center justify-center rounded-full bg-[#25D366] text-white">
+<i class="ri-whatsapp-fill"></i>
+</a>
+<a href="#" class="w-10 h-10 flex items-center justify-center rounded-full bg-[#0A66C2] text-white">
+<i class="ri-linkedin-fill"></i>
+</a>
+</div>
+</div>
+<div>
+<p class="text-sm text-gray-700 mb-2">Or copy link:</p>
+<div class="flex">
+<input type="text" value="https://chefhub.com/recipes/neapolitan-margherita-pizza" class="flex-1 px-3 py-2 border border-gray-300 rounded-l-lg text-sm" readonly>
+<button class="bg-primary hover:bg-primary/90 text-white px-3 py-2 rounded-r-lg text-sm font-medium transition-colors whitespace-nowrap">Copy</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Newsletter Section -->
+<section class="bg-gray-100 py-16">
+<div class="container mx-auto px-4">
+<div class="max-w-2xl mx-auto text-center">
+<h2 class="text-3xl font-bold text-gray-900 mb-3">Join Our Culinary Community</h2>
+<p class="text-gray-700 mb-6">Subscribe to receive weekly curated recipes, cooking tips, and exclusive content from top chefs around the world.</p>
+<div class="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
+<input type="email" placeholder="Your email address" class="flex-1 px-4 py-3 rounded-button border-none focus:outline-none focus:ring-2 focus:ring-primary text-sm w-full">
+<button class="bg-primary hover:bg-primary/90 text-white px-6 py-3 rounded-button font-medium transition-colors whitespace-nowrap">Subscribe</button>
+</div>
+<p class="text-xs text-gray-500 mt-4">By subscribing, you agree to our Privacy Policy and consent to receive updates from our company.</p>
+</div>
+</div>
+</section>
+<!-- Footer -->
+<footer class="bg-white pt-12 pb-8 border-t border-gray-200">
+<div class="container mx-auto px-4">
+<div class="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-8 mb-8">
+<div>
+<a href="#" class="mb-4 inline-block">
+<img src="https://static.readdy.ai/image/685839bcded31a203a7d44ffe3566552/c5cd371de40c9afda1372b7b6bfb8a45.png" alt="Chef Hub" class="h-10">
+</a>
+<p class="text-gray-600 text-sm mb-4">Discover, share, and celebrate the art of cooking with our global community of food enthusiasts and professional chefs.</p>
+<div class="flex space-x-3">
+<a href="#" class="w-8 h-8 flex items-center justify-center rounded-full bg-gray-100 text-gray-700 hover:bg-primary hover:text-white transition-colors">
+<i class="ri-instagram-line"></i>
+</a>
+<a href="#" class="w-8 h-8 flex items-center justify-center rounded-full bg-gray-100 text-gray-700 hover:bg-primary hover:text-white transition-colors">
+<i class="ri-facebook-fill"></i>
+</a>
+<a href="#" class="w-8 h-8 flex items-center justify-center rounded-full bg-gray-100 text-gray-700 hover:bg-primary hover:text-white transition-colors">
+<i class="ri-twitter-x-line"></i>
+</a>
+<a href="#" class="w-8 h-8 flex items-center justify-center rounded-full bg-gray-100 text-gray-700 hover:bg-primary hover:text-white transition-colors">
+<i class="ri-pinterest-line"></i>
+</a>
+</div>
+</div>
+<div>
+<h3 class="font-semibold text-gray-900 mb-4">Popular Categories</h3>
+<ul class="space-y-2 text-sm">
+<li><a href="#" class="text-gray-600 hover:text-primary transition-colors">Italian Cuisine</a></li>
+<li><a href="#" class="text-gray-600 hover:text-primary transition-colors">Asian Fusion</a></li>
+<li><a href="#" class="text-gray-600 hover:text-primary transition-colors">Mediterranean</a></li>
+<li><a href="#" class="text-gray-600 hover:text-primary transition-colors">Vegetarian & Vegan</a></li>
+<li><a href="#" class="text-gray-600 hover:text-primary transition-colors">Desserts & Pastries</a></li>
+<li><a href="#" class="text-gray-600 hover:text-primary transition-colors">Quick & Easy</a></li>
+</ul>
+</div>
+<div>
+<h3 class="font-semibold text-gray-900 mb-4">Explore</h3>
+<ul class="space-y-2 text-sm">
+<li><a href="#" class="text-gray-600 hover:text-primary transition-colors">Featured Chefs</a></li>
+<li><a href="#" class="text-gray-600 hover:text-primary transition-colors">Cooking Classes</a></li>
+<li><a href="#" class="text-gray-600 hover:text-primary transition-colors">Recipe Collections</a></li>
+<li><a href="#" class="text-gray-600 hover:text-primary transition-colors">Seasonal Specials</a></li>
+<li><a href="#" class="text-gray-600 hover:text-primary transition-colors">Kitchen Tips</a></li>
+<li><a href="#" class="text-gray-600 hover:text-primary transition-colors">Food Photography</a></li>
+</ul>
+</div>
+<div>
+<h3 class="font-semibold text-gray-900 mb-4">Company</h3>
+<ul class="space-y-2 text-sm">
+<li><a href="#" class="text-gray-600 hover:text-primary transition-colors">About Us</a></li>
+<li><a href="#" class="text-gray-600 hover:text-primary transition-colors">Contact</a></li>
+<li><a href="#" class="text-gray-600 hover:text-primary transition-colors">Careers</a></li>
+<li><a href="#" class="text-gray-600 hover:text-primary transition-colors">Privacy Policy</a></li>
+<li><a href="#" class="text-gray-600 hover:text-primary transition-colors">Terms of Service</a></li>
+<li><a href="#" class="text-gray-600 hover:text-primary transition-colors">Cookie Policy</a></li>
+</ul>
+</div>
+</div>
+<div class="pt-8 border-t border-gray-200 flex flex-col md:flex-row justify-between items-center">
+<p class="text-sm text-gray-500 mb-4 md:mb-0 text-center md:text-left">© 2025 Chef Hub. All rights reserved.</p>
+<div class="flex items-center space-x-4">
+<div class="w-8 h-5 flex items-center justify-center">
+<i class="ri-visa-fill text-blue-700 text-xl"></i>
+</div>
+<div class="w-8 h-5 flex items-center justify-center">
+<i class="ri-mastercard-fill text-orange-600 text-xl"></i>
+</div>
+<div class="w-8 h-5 flex items-center justify-center">
+<i class="ri-paypal-fill text-blue-500 text-xl"></i>
+</div>
+<div class="w-8 h-5 flex items-center justify-center">
+<i class="ri-apple-fill text-gray-800 text-xl"></i>
+</div>
+</div>
+</div>
+</div>
+</footer>
+<script>
+// Initialize masonry grid layout
+function initMasonry() {
+const container = document.getElementById('masonry-container');
+if (!container) return;
+const items = container.querySelectorAll('.masonry-item');
+items.forEach(item => {
+// Calculate height based on image and content
+const img = item.querySelector('img');
+const content = item.querySelector('div.p-4');
+// Wait for images to load
+if (img.complete) {
+const height = Math.ceil((img.offsetHeight + content.offsetHeight) / 10);
+item.style.setProperty('--span', 24); // Fixed height for all items
+} else {
+img.addEventListener('load', () => {
+const height = Math.ceil((img.offsetHeight + content.offsetHeight) / 10);
+item.style.setProperty('--span', 24); // Fixed height for all items
+});
+}
+});
+}
+// Hero Slider Functionality
+let currentSlide = 0;
+const sliderItems = document.querySelectorAll('.slider-item');
+const carouselDots = document.querySelectorAll('.carousel-dot');
+const totalSlides = sliderItems.length;
+function showSlide(index) {
+// Hide all slides
+sliderItems.forEach(item => {
+item.classList.remove('active');
+});
+// Update dots
+carouselDots.forEach(dot => {
+dot.classList.remove('opacity-100');
+dot.classList.add('opacity-50');
+});
+// Show the current slide
+sliderItems[index].classList.add('active');
+carouselDots[index].classList.remove('opacity-50');
+carouselDots[index].classList.add('opacity-100');
+currentSlide = index;
+}
+function nextSlide() {
+let next = currentSlide + 1;
+if (next >= totalSlides) next = 0;
+showSlide(next);
+}
+// Auto slide every 5 seconds
+const slideInterval = setInterval(nextSlide, 5000);
+// Manual navigation with dots
+carouselDots.forEach((dot, index) => {
+dot.addEventListener('click', () => {
+clearInterval(slideInterval); // Stop auto sliding when manually navigating
+showSlide(index);
+// Restart auto sliding after manual navigation
+setTimeout(() => {
+setInterval(nextSlide, 5000);
+}, 5000);
+});
+});
+// Search toggle
+const searchToggle = document.getElementById('searchToggle');
+const searchBar = document.getElementById('searchBar');
+searchToggle.addEventListener('click', () => {
+searchBar.classList.toggle('hidden');
+if (!searchBar.classList.contains('hidden')) {
+searchBar.querySelector('input').focus();
+}
+});
+// Filter toggle
+const filterButton = document.getElementById('filterButton');
+const advancedFilters = document.getElementById('advancedFilters');
+filterButton.addEventListener('click', () => {
+advancedFilters.classList.toggle('hidden');
+});
+// Modal functionality
+const modal = document.getElementById('foodDetailModal');
+const recipeModal = document.getElementById('recipeDetailModal');
+const closeModal = document.getElementById('closeModal');
+const closeRecipeModal = document.getElementById('closeRecipeModal');
+const viewRecipeButtons = document.querySelectorAll('button.text-xs.text-primary');
+viewRecipeButtons.forEach(button => {
+button.addEventListener('click', (e) => {
+e.stopPropagation();
+recipeModal.style.display = 'block';
+document.body.style.overflow = 'hidden';
+});
+});
+// Gallery view recipe buttons
+const galleryViewRecipeButtons = document.querySelectorAll('.gallery-item button.bg-primary');
+galleryViewRecipeButtons.forEach(button => {
+button.addEventListener('click', (e) => {
+e.stopPropagation();
+recipeModal.style.display = 'block';
+document.body.style.overflow = 'hidden';
+});
+});
+closeModal.addEventListener('click', () => {
+modal.style.display = 'none';
+document.body.style.overflow = 'auto';
+});
+closeRecipeModal.addEventListener('click', () => {
+recipeModal.style.display = 'none';
+document.body.style.overflow = 'auto';
+});
+window.addEventListener('click', (event) => {
+if (event.target === modal) {
+modal.style.display = 'none';
+document.body.style.overflow = 'auto';
+}
+if (event.target === recipeModal) {
+recipeModal.style.display = 'none';
+document.body.style.overflow = 'auto';
+}
+});
+// Print recipe functionality
+const printRecipeBtn = document.getElementById('printRecipeBtn');
+if (printRecipeBtn) {
+printRecipeBtn.addEventListener('click', () => {
+window.print();
+});
+}
+// Load more functionality
+const loadMoreBtn = document.getElementById('loadMoreBtn');
+loadMoreBtn.addEventListener('click', () => {
+loadMoreBtn.innerHTML = '<i class="ri-loader-4-line animate-spin mr-2"></i> Loading...';
+// Simulate loading delay
+setTimeout(() => {
+loadMoreBtn.innerHTML = 'Load More';
+// In a real implementation, you would fetch more items and add them to the grid
+// Then reinitialize the masonry layout
+}, 1500);
+});
+// Like button functionality
+const likeButtons = document.querySelectorAll('.absolute.top-3.right-3');
+likeButtons.forEach(button => {
+button.addEventListener('click', (e) => {
+e.stopPropagation();
+const icon = button.querySelector('i');
+if (icon.classList.contains('ri-heart-line')) {
+icon.classList.remove('ri-heart-line');
+icon.classList.add('ri-heart-fill', 'text-primary');
+} else {
+icon.classList.remove('ri-heart-fill', 'text-primary');
+icon.classList.add('ri-heart-line');
+}
+});
+});
+// Food card click functionality
+const foodCards = document.querySelectorAll('.food-card');
+foodCards.forEach(card => {
+card.addEventListener('click', () => {
+modal.style.display = 'block';
+document.body.style.overflow = 'hidden';
+});
+});
+// View Details button click
+const viewDetailsButtons = document.querySelectorAll('.absolute.inset-0 button');
+viewDetailsButtons.forEach(button => {
+button.addEventListener('click', (e) => {
+e.stopPropagation();
+modal.style.display = 'block';
+document.body.style.overflow = 'hidden';
+});
+});
+// Gallery Slider Functionality
+let currentGallerySlide = 0;
+const galleryTrack = document.getElementById('gallery-track');
+const galleryItems = document.querySelectorAll('.gallery-item');
+const galleryDots = document.querySelectorAll('.gallery-dot');
+const totalGallerySlides = galleryItems.length;
+const galleryPrevBtn = document.getElementById('gallery-prev');
+const galleryNextBtn = document.getElementById('gallery-next');
+function showGallerySlide(index) {
+// Update current slide index
+currentGallerySlide = index;
+// Move the track to show the current slide
+galleryTrack.style.transform = `translateX(-${index * 100}%)`;
+// Update dots
+galleryDots.forEach((dot, i) => {
+if (i === index) {
+dot.classList.add('bg-primary');
+dot.classList.remove('bg-gray-300');
+dot.classList.add('opacity-100');
+dot.classList.remove('opacity-50');
+} else {
+dot.classList.remove('bg-primary');
+dot.classList.add('bg-gray-300');
+dot.classList.remove('opacity-100');
+dot.classList.add('opacity-50');
+}
+});
+}
+function nextGallerySlide() {
+let next = currentGallerySlide + 1;
+if (next >= totalGallerySlides) next = 0;
+showGallerySlide(next);
+}
+function prevGallerySlide() {
+let prev = currentGallerySlide - 1;
+if (prev < 0) prev = totalGallerySlides - 1;
+showGallerySlide(prev);
+}
+// Add event listeners for gallery navigation
+if (galleryPrevBtn) {
+galleryPrevBtn.addEventListener('click', prevGallerySlide);
+}
+if (galleryNextBtn) {
+galleryNextBtn.addEventListener('click', nextGallerySlide);
+}
+// Add event listeners for gallery dots
+galleryDots.forEach((dot, index) => {
+dot.addEventListener('click', () => {
+showGallerySlide(index);
+});
+});
+// Recipe tabs functionality
+const recipeTabs = document.querySelectorAll('.recipe-tab');
+const recipeTabContents = document.querySelectorAll('.recipe-tab-content');
+recipeTabs.forEach(tab => {
+tab.addEventListener('click', () => {
+// Remove active class from all tabs
+recipeTabs.forEach(t => t.classList.remove('bg-primary', 'text-white'));
+tab.classList.add('bg-primary', 'text-white');
+// Hide all tab contents
+recipeTabContents.forEach(content => content.classList.add('hidden'));
+// Show the selected tab content
+const targetId = tab.getAttribute('data-tab');
+document.getElementById(targetId).classList.remove('hidden');
+});
+});
+// Share recipe functionality
+const shareRecipeBtn = document.getElementById('shareRecipeBtn');
+if (shareRecipeBtn) {
+shareRecipeBtn.addEventListener('click', () => {
+const shareModal = document.getElementById('shareModal');
+shareModal.classList.remove('hidden');
+});
+}
+// Close share modal
+const closeShareModal = document.getElementById('closeShareModal');
+if (closeShareModal) {
+closeShareModal.addEventListener('click', () => {
+const shareModal = document.getElementById('shareModal');
+shareModal.classList.add('hidden');
+});
+}
+// Mobile menu functionality
+const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+const mobileNav = document.getElementById('mobileNav');
+const closeMobileNav = document.getElementById('closeMobileNav');
+if (mobileMenuBtn) {
+  mobileMenuBtn.addEventListener('click', () => {
+    mobileNav.classList.add('open');
+    mobileNav.classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+  });
+}
+if (closeMobileNav) {
+  closeMobileNav.addEventListener('click', () => {
+    mobileNav.classList.remove('open');
+    setTimeout(() => {
+      mobileNav.classList.add('hidden');
+    }, 300);
+    document.body.style.overflow = 'auto';
+  });
+}
+// Close mobile nav when clicking outside
+if (mobileNav) {
+  mobileNav.addEventListener('click', (e) => {
+    if (e.target === mobileNav) {
+      mobileNav.classList.remove('open');
+      setTimeout(() => {
+        mobileNav.classList.add('hidden');
+      }, 300);
+      document.body.style.overflow = 'auto';
+    }
+  });
+}
+// Handle responsive behavior
+function handleResponsive() {
+  const width = window.innerWidth;
+  
+  // Adjust gallery slider for mobile
+  if (width < 768 && galleryTrack) {
+    // Smaller touch targets for mobile
+    const galleryControls = document.querySelectorAll('#gallery-prev, #gallery-next');
+    galleryControls.forEach(control => {
+      control.classList.remove('w-12', 'h-12');
+      control.classList.add('w-10', 'h-10');
+    });
+  }
+  
+  // Reinitialize masonry on resize
+  initMasonry();
+}
+// Initialize on page load
+window.addEventListener('load', () => {
+  initMasonry();
+  // Initialize the first slide
+  showSlide(0);
+  // Initialize gallery slider
+  if (galleryTrack) {
+    showGallerySlide(0);
+  }
+  // Handle responsive elements
+  handleResponsive();
+});
+window.addEventListener('resize', handleResponsive);
+</script>
+</body>
+</html>
